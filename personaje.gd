@@ -1,11 +1,14 @@
 extends CharacterBody3D
 
+enum Estado { QUIETO, CORRER, AIRE }
+# altura del salto que se puede hacer desde cada estado (en el aire es el 2.º salto)
+const ALTURA = [1.5, 1.5, 1.0]   # metros, en el orden del enum
+
 @export var camara: Camera3D
 @export var speed_caminar = 6.0
 @export var speed_correr = 6.0
 @export var tiempo_arranque = 0.2
 @export var gravedad = 25.0
-@export var altura_salto = 1.5
 @onready var anim = $Modelo/AnimationPlayer
 
 # Enchufes: otros scripts (las acciones del juego) cambian estas tres variables.
@@ -13,6 +16,9 @@ var multiplicador = 1.0     # 1 = rapidez normal, 0.5 = la mitad, 0 = quieto
 var empuje = Vector3.ZERO   # velocidad extra en m/s (dash, retroceso)
 var accion = ""             # animación de la acción; "" = ninguna
 var avance = Vector3.ZERO   # la parte de la velocidad que dan las teclas
+var estado = Estado.QUIETO
+var altura = 0.0
+var saltos = 0   # vuelve a 0 al tocar el suelo
 
 
 func _ready():
@@ -21,10 +27,14 @@ func _ready():
 
 
 func _physics_process(delta):
-	if not is_on_floor():
+	if is_on_floor():
+		saltos = 0
+	else:
 		velocity.y -= gravedad * delta
-	elif Input.is_action_just_pressed("saltar"):
-		velocity.y = sqrt(2 * gravedad * altura_salto)
+	if Input.is_action_just_pressed("saltar") and saltos < 2:
+		velocity.y = sqrt(2 * gravedad * ALTURA[estado])
+		saltos += 1
+		print("salto ", saltos, " · altura ", ALTURA[estado], " m")
 
 	var input_dir = Input.get_vector("move_left", "move_right", "move_up", "move_down")
 	var entrada = Vector3(input_dir.x, 0.0, input_dir.y)
@@ -42,19 +52,37 @@ func _physics_process(delta):
 
 	if direction.length() > 0:
 		basis = Basis.looking_at(direction)
-	if accion != "":
-		anim.play(accion)
-	elif not is_on_floor():
-		anim.play("jump" if velocity.y > 0 else "fall")
-	elif avance.length() > speed_caminar + 0.1:
-		anim.play("sprint")
-	elif avance.length() > 0.1:
-		anim.play("walk")
-	else:
-		anim.play("idle")
 
 	move_and_slide()
+	var antes = estado
+	estado = elegir_estado()
+	altura = ALTURA[estado]
+	if estado != antes:
+		print("estado ", Estado.keys()[estado], " · salto de ", altura, " m")
+	animar()
 	_prueba()
+
+
+func elegir_estado():
+	if not is_on_floor():
+		return Estado.AIRE
+	var rapidez = Vector2(velocity.x, velocity.z).length()
+	if rapidez < 0.1:
+		return Estado.QUIETO
+	return Estado.CORRER   # Ceniza no camina: siempre corre
+
+
+func animar():
+	if accion != "":
+		anim.play(accion)
+		return
+	match estado:
+		Estado.QUIETO:
+			anim.play("idle")
+		Estado.CORRER:
+			anim.play("sprint")
+		Estado.AIRE:
+			anim.play("jump" if velocity.y > 0 else "fall")
 
 
 # ---------------------------------------------------------------------------
