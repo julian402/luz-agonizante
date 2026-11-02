@@ -5,6 +5,7 @@
 [ext_resource type="Script" path="res://apuntar.gd" id="3_apuntar"]
 [ext_resource type="Script" path="res://diana.gd" id="4_diana"]
 [ext_resource type="Script" path="res://esquivar.gd" id="5_esquivar"]
+[ext_resource type="Script" path="res://camara_sigue.gd" id="6_camara"]
 
 [sub_resource type="ProceduralSkyMaterial" id="CieloMat"]
 
@@ -84,8 +85,10 @@ surface_material_override/0 = SubResource("CajaMat")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Cajas/Caja3"]
 shape = SubResource("CajaForma")
 
-[node name="Camera3D" type="Camera3D" parent="."]
+[node name="Camera3D" type="Camera3D" parent="." node_paths=PackedStringArray("objetivo")]
 transform = Transform3D(1, 0, 0, 0, 0.819152, 0.573576, 0, -0.573576, 0.819152, 0, 5, 7)
+script = ExtResource("6_camara")
+objetivo = NodePath("../Personaje")
 
 [node name="Personaje" type="CharacterBody3D" parent="." node_paths=PackedStringArray("camara")]
 script = ExtResource("1_pj")
