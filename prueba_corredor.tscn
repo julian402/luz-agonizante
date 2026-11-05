@@ -7,6 +7,7 @@
 [ext_resource type="Script" path="res://esquivar.gd" id="5_esquivar"]
 [ext_resource type="Script" path="res://camara_sigue.gd" id="6_camara"]
 [ext_resource type="PackedScene" path="res://coloso.tscn" id="7_coloso"]
+[ext_resource type="Script" path="res://salud.gd" id="8_salud"]
 
 [sub_resource type="ProceduralSkyMaterial" id="CieloMat"]
 
@@ -108,9 +109,16 @@ script = ExtResource("3_apuntar")
 [node name="Esquivar" type="Node" parent="Personaje"]
 script = ExtResource("5_esquivar")
 
+[node name="Salud" type="Node" parent="Personaje"]
+script = ExtResource("8_salud")
+vida = 100
+invulnerable = 0.3
+
 [node name="Coloso" parent="." instance=ExtResource("7_coloso")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, 0)
 rapidez = 1.5
 rango_ataque = 1.8
 tiempo_aviso = 1.0
 tiempo_recarga = 2.0
+alcance_golpe = 2.2
+danio = 20
