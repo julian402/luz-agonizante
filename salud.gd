@@ -9,6 +9,10 @@ signal sin_vida
 var reloj = 0.0
 
 
+func _ready():
+	sin_vida.connect(_al_quedar_sin_vida)
+
+
 func _physics_process(delta):
 	reloj = maxf(reloj - delta, 0.0)
 
@@ -21,3 +25,10 @@ func recibir_golpe(danio):
 	cambio.emit(vida)
 	if vida == 0:
 		sin_vida.emit()
+
+
+# Se busca aqui y no en _ready(): la Partida quiza todavia no existia.
+func _al_quedar_sin_vida():
+	var partida = get_tree().get_first_node_in_group("partida")
+	if partida != null:
+		partida.perder("sin vida")
