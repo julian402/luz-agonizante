@@ -114,6 +114,7 @@ script = ExtResource("5_esquivar")
 script = ExtResource("8_salud")
 vida = 100
 invulnerable = 0.3
+reapariciones = 0
 
 [node name="Coloso" parent="." instance=ExtResource("7_coloso")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, 0)
