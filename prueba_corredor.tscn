@@ -8,6 +8,7 @@
 [ext_resource type="Script" path="res://camara_sigue.gd" id="6_camara"]
 [ext_resource type="PackedScene" path="res://coloso.tscn" id="7_coloso"]
 [ext_resource type="Script" path="res://salud.gd" id="8_salud"]
+[ext_resource type="PackedScene" path="res://hud.tscn" id="9_hud"]
 
 [sub_resource type="ProceduralSkyMaterial" id="CieloMat"]
 
@@ -125,3 +126,5 @@ danio = 20
 vida = 8.0
 vida_huida = 2.0
 danio_prueba = 1.0
+
+[node name="HUD" parent="." instance=ExtResource("9_hud")]
