@@ -1,0 +1,40 @@
+extends Node
+
+enum Estado { JUGANDO, GANO, PERDIO }
+
+@export var tiempo_limite = 30.0
+# false: al acabarse el tiempo se pierde. true: sobrevivir gana.
+@export var gana_con_tiempo = false
+
+var estado = Estado.JUGANDO
+var tiempo = 0.0
+
+func _ready():
+	add_to_group("partida")
+	tiempo = tiempo_limite
+
+func _physics_process(delta):
+	# Prueba: Enter = perder. Borren estas dos líneas al terminar.
+	if Input.is_action_just_pressed("ui_accept"):
+		perder("prueba")
+	if estado != Estado.JUGANDO:
+		return
+	tiempo = maxf(tiempo - delta, 0.0)
+	if tiempo <= 0.001:
+		if gana_con_tiempo:
+			ganar()
+		else:
+			perder("se acabó el tiempo")
+
+func ganar():
+	terminar(Estado.GANO, "ganó")
+
+func perder(motivo):
+	terminar(Estado.PERDIO, motivo)
+
+# La guarda: la partida termina una sola vez.
+func terminar(nuevo, motivo):
+	if estado != Estado.JUGANDO:
+		return
+	estado = nuevo
+	print("fin: ", Estado.keys()[estado], " cuadro ", Engine.get_physics_frames(), " (", motivo, ")")

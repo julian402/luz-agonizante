@@ -6,6 +6,7 @@
 [ext_resource type="Script" path="res://diana.gd" id="4_diana"]
 [ext_resource type="Script" path="res://esquivar.gd" id="5_esquivar"]
 [ext_resource type="Script" path="res://camara_sigue.gd" id="6_camara"]
+[ext_resource type="Script" path="res://partida.gd" id="7_partida"]
 
 [sub_resource type="ProceduralSkyMaterial" id="CieloMat"]
 
@@ -90,7 +91,7 @@ transform = Transform3D(1, 0, 0, 0, 0.819152, 0.573576, 0, -0.573576, 0.819152, 
 script = ExtResource("6_camara")
 objetivo = NodePath("../Personaje")
 
-[node name="Personaje" type="CharacterBody3D" parent="." node_paths=PackedStringArray("camara")]
+[node name="Personaje" type="CharacterBody3D" parent="." groups=["jugador"] node_paths=PackedStringArray("camara")]
 script = ExtResource("1_pj")
 camara = NodePath("../Camera3D")
 
@@ -106,3 +107,7 @@ script = ExtResource("3_apuntar")
 
 [node name="Esquivar" type="Node" parent="Personaje"]
 script = ExtResource("5_esquivar")
+
+[node name="Partida" type="Node" parent="."]
+script = ExtResource("7_partida")
+
