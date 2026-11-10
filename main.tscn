@@ -7,6 +7,8 @@
 [ext_resource type="Script" path="res://esquivar.gd" id="5_esquivar"]
 [ext_resource type="Script" path="res://camara_sigue.gd" id="6_camara"]
 [ext_resource type="Script" path="res://partida.gd" id="7_partida"]
+[ext_resource type="Script" path="res://salud.gd" id="8_salud"]
+[ext_resource type="PackedScene" path="res://hud.tscn" id="9_hud"]
 
 [sub_resource type="ProceduralSkyMaterial" id="CieloMat"]
 
@@ -108,6 +110,13 @@ script = ExtResource("3_apuntar")
 [node name="Esquivar" type="Node" parent="Personaje"]
 script = ExtResource("5_esquivar")
 
+[node name="Salud" type="Node" parent="Personaje"]
+script = ExtResource("8_salud")
+vida = 100
+invulnerable = 0.3
+reapariciones = 0
+
 [node name="Partida" type="Node" parent="."]
 script = ExtResource("7_partida")
 
+[node name="HUD" parent="." instance=ExtResource("9_hud")]
