@@ -16,10 +16,27 @@ var estado = Estado.ACERCARSE
 var reloj = 0.0
 var jugador = null
 @onready var anim = $Modelo/AnimationPlayer
+var etiqueta = null   # la vida encima de la cabeza
+var destello = null   # luz roja al recibir un golpe
 
 
 func _ready():
 	jugador = get_tree().get_first_node_in_group("jugador")
+	etiqueta = Label3D.new()
+	etiqueta.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+	etiqueta.position = Vector3(0, 3.2, 0)
+	etiqueta.font_size = 96
+	etiqueta.pixel_size = 0.008
+	etiqueta.outline_size = 24
+	etiqueta.modulate = Color("#E8433A")
+	add_child(etiqueta)
+	destello = OmniLight3D.new()
+	destello.light_color = Color("#E8433A")
+	destello.light_energy = 0.0
+	destello.omni_range = 3.0
+	destello.position = Vector3(0, 1.5, 0)
+	add_child(destello)
+	mostrar_vida()
 
 
 func _physics_process(delta):
@@ -80,6 +97,10 @@ func cambiar_a(nuevo):
 func recibir_golpe(cuanto):
 	vida -= cuanto
 	print(name, " vida ", vida)
+	mostrar_vida()
+	# Destello rojo de 0.15 s para que se vea el golpe.
+	destello.light_energy = 4.0
+	get_tree().create_timer(0.15).timeout.connect(apagar_destello)
 	if vida <= 0:
 		print(name, " vencido")
 		queue_free()
@@ -115,3 +136,12 @@ func distancia():
 	var p = jugador.global_position
 	var o = global_position
 	return Vector2(p.x - o.x, p.z - o.z).length()
+
+
+func mostrar_vida():
+	etiqueta.text = str(maxi(int(vida), 0))
+
+
+func apagar_destello():
+	if is_instance_valid(destello):
+		destello.light_energy = 0.0
