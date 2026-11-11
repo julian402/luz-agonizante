@@ -1,15 +1,15 @@
 [gd_scene format=3]
 
-[ext_resource type="Script" path="res://personaje.gd" id="1_pj"]
-[ext_resource type="PackedScene" path="res://personaje/character-male-a.glb" id="2_modelo"]
-[ext_resource type="Script" path="res://apuntar.gd" id="3_apuntar"]
-[ext_resource type="Script" path="res://diana.gd" id="4_diana"]
-[ext_resource type="Script" path="res://esquivar.gd" id="5_esquivar"]
-[ext_resource type="Script" path="res://camara_sigue.gd" id="6_camara"]
-[ext_resource type="Script" path="res://partida.gd" id="7_partida"]
-[ext_resource type="Script" path="res://salud.gd" id="8_salud"]
+[ext_resource type="Script" uid="uid://cct4m0pdjhcq7" path="res://personaje.gd" id="1_pj"]
+[ext_resource type="PackedScene" uid="uid://bkmexfnojlmxi" path="res://personaje/character-male-a.glb" id="2_modelo"]
+[ext_resource type="Script" uid="uid://b3iliyy10jkc6" path="res://apuntar.gd" id="3_apuntar"]
+[ext_resource type="Script" uid="uid://xtyeof51y6la" path="res://diana.gd" id="4_diana"]
+[ext_resource type="Script" uid="uid://v64i1yp3sce8" path="res://esquivar.gd" id="5_esquivar"]
+[ext_resource type="Script" uid="uid://brsvsvxhuryes" path="res://camara_sigue.gd" id="6_camara"]
+[ext_resource type="PackedScene" path="res://coloso.tscn" id="7_coloso"]
+[ext_resource type="Script" uid="uid://do4latv0hpyuq" path="res://salud.gd" id="8_salud"]
 [ext_resource type="PackedScene" path="res://hud.tscn" id="9_hud"]
-[ext_resource type="PackedScene" path="res://coloso.tscn" id="10_coloso"]
+[ext_resource type="Script" uid="uid://bh4fvfsglu50x" path="res://partida.gd" id="10_partida"]
 
 [sub_resource type="ProceduralSkyMaterial" id="CieloMat"]
 
@@ -17,113 +17,126 @@
 sky_material = SubResource("CieloMat")
 
 [sub_resource type="Environment" id="Entorno"]
-background_mode = 2
+background_mode = 1
+background_color = Color(0.043, 0.051, 0.078, 1)
 sky = SubResource("Cielo")
-
-[sub_resource type="PlaneMesh" id="PisoMalla"]
-size = Vector2(30, 30)
+ambient_light_source = 2
+ambient_light_color = Color(0.227, 0.247, 0.294, 1)
+ambient_light_energy = 0.6
 
 [sub_resource type="BoxShape3D" id="PisoForma"]
-size = Vector3(30, 0.2, 30)
+size = Vector3(30, 0.2, 3)
+
+[sub_resource type="BoxMesh" id="CajaMalla"]
+
+[sub_resource type="StandardMaterial3D" id="CajaMat"]
+albedo_color = Color(0.85, 0.55, 0.25, 1)
+
+[sub_resource type="BoxShape3D" id="CajaForma"]
 
 [sub_resource type="CapsuleShape3D" id="Capsula"]
 radius = 0.35
 height = 1.75
 
-[sub_resource type="BoxMesh" id="CajaMalla"]
+[sub_resource type="BoxMesh" id="ParedMalla"]
+size = Vector3(30, 10, 0.2)
 
-[sub_resource type="BoxShape3D" id="CajaForma"]
+[sub_resource type="StandardMaterial3D" id="ParedMat"]
+albedo_color = Color(0.227, 0.247, 0.294, 1)
 
-[sub_resource type="StandardMaterial3D" id="CajaMat"]
-albedo_color = Color(0.85, 0.55, 0.25, 1)
+[sub_resource type="BoxMesh" id="PisoMalla"]
+material = SubResource("ParedMat")
+size = Vector3(30, 4, 3)
 
-[node name="Main" type="Node3D"]
+[node name="Main" type="Node3D" unique_id=1342151840]
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1734817888]
 environment = SubResource("Entorno")
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=112912316]
 transform = Transform3D(0.866025, -0.353553, 0.353553, 0, 0.707107, 0.707107, -0.5, -0.612372, 0.612372, 0, 6, 0)
+light_energy = 0.3
 shadow_enabled = true
 
-[node name="Suelo" type="StaticBody3D" parent="."]
+[node name="Suelo" type="StaticBody3D" parent="." unique_id=1714668835]
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Suelo"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Suelo" unique_id=402206374]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2, 0)
 mesh = SubResource("PisoMalla")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Suelo"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Suelo" unique_id=2145501558]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
 shape = SubResource("PisoForma")
 
-[node name="Cajas" type="Node3D" parent="."]
+[node name="Cajas" type="Node3D" parent="." unique_id=205152427]
 
-[node name="Caja1" type="StaticBody3D" parent="Cajas"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0.5, -4)
+[node name="Caja1" type="StaticBody3D" parent="Cajas" unique_id=217679413]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0.5, 0)
 script = ExtResource("4_diana")
 vida = 4
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Cajas/Caja1"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Cajas/Caja1" unique_id=764793481]
 mesh = SubResource("CajaMalla")
 surface_material_override/0 = SubResource("CajaMat")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Cajas/Caja1"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Cajas/Caja1" unique_id=195114334]
 shape = SubResource("CajaForma")
 
-[node name="Caja2" type="StaticBody3D" parent="Cajas"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0.5, -2)
+[node name="Caja2" type="StaticBody3D" parent="Cajas" unique_id=1061098231]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11, 0.5, 0)
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Cajas/Caja2"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Cajas/Caja2" unique_id=137839771]
 mesh = SubResource("CajaMalla")
 surface_material_override/0 = SubResource("CajaMat")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Cajas/Caja2"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Cajas/Caja2" unique_id=130803494]
 shape = SubResource("CajaForma")
 
-[node name="Caja3" type="StaticBody3D" parent="Cajas"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0.5, 3)
+[node name="Caja3" type="StaticBody3D" parent="Cajas" unique_id=1885185221]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 0.5, 0)
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Cajas/Caja3"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Cajas/Caja3" unique_id=228247061]
 mesh = SubResource("CajaMalla")
 surface_material_override/0 = SubResource("CajaMat")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Cajas/Caja3"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Cajas/Caja3" unique_id=1124553874]
 shape = SubResource("CajaForma")
 
-[node name="Camera3D" type="Camera3D" parent="." node_paths=PackedStringArray("objetivo")]
-transform = Transform3D(1, 0, 0, 0, 0.819152, 0.573576, 0, -0.573576, 0.819152, 0, 5, 7)
+[node name="Camera3D" type="Camera3D" parent="." unique_id=442437508 node_paths=PackedStringArray("objetivo")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 9)
 script = ExtResource("6_camara")
 objetivo = NodePath("../Personaje")
+distancia = Vector3(0, 1.5, 9)
+limite_min = Vector2(-10, 0)
+limite_max = Vector2(10, 0)
 
-[node name="Personaje" type="CharacterBody3D" parent="." groups=["jugador"] node_paths=PackedStringArray("camara")]
+[node name="Personaje" type="CharacterBody3D" parent="." unique_id=839677482 node_paths=PackedStringArray("camara") groups=["jugador"]]
+axis_lock_linear_z = true
 script = ExtResource("1_pj")
 camara = NodePath("../Camera3D")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Personaje"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Personaje" unique_id=15845229]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.875, 0)
 shape = SubResource("Capsula")
 
-[node name="Modelo" parent="Personaje" instance=ExtResource("2_modelo")]
+[node name="Modelo" parent="Personaje" unique_id=423483600 instance=ExtResource("2_modelo")]
 transform = Transform3D(-2.6, 0, 0, 0, 2.6, 0, 0, 0, -2.6, 0, 0, 0)
 
-[node name="Apuntar" type="Node" parent="Personaje"]
+[node name="Apuntar" type="Node" parent="Personaje" unique_id=1632281735]
 script = ExtResource("3_apuntar")
 
-[node name="Esquivar" type="Node" parent="Personaje"]
+[node name="Esquivar" type="Node" parent="Personaje" unique_id=155501366]
 script = ExtResource("5_esquivar")
 
-[node name="Salud" type="Node" parent="Personaje"]
+[node name="Salud" type="Node" parent="Personaje" unique_id=872870991]
 script = ExtResource("8_salud")
 vida = 100
 invulnerable = 0.3
 reapariciones = 0
 
-[node name="Partida" type="Node" parent="."]
-script = ExtResource("7_partida")
-
-[node name="HUD" parent="." instance=ExtResource("9_hud")]
-
-[node name="Coloso" parent="." instance=ExtResource("10_coloso")]
+[node name="Coloso" parent="." unique_id=1800066357 instance=ExtResource("7_coloso")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, 0)
+axis_lock_linear_z = true
 rapidez = 1.5
 rango_ataque = 1.8
 tiempo_aviso = 1.0
@@ -133,3 +146,19 @@ danio = 20
 vida = 8.0
 vida_huida = 2.0
 danio_prueba = 1.0
+
+[node name="HUD" parent="." unique_id=2071462178 instance=ExtResource("9_hud")]
+
+[node name="Partida" type="Node" parent="." unique_id=947678071]
+script = ExtResource("10_partida")
+
+[node name="Fondo" type="MeshInstance3D" parent="." unique_id=1444799399]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, -1.6)
+mesh = SubResource("ParedMalla")
+surface_material_override/0 = SubResource("ParedMat")
+
+[node name="Antorcha" type="OmniLight3D" parent="." unique_id=2134897077]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, -1)
+light_color = Color(1, 0.702, 0.278, 1)
+light_energy = 2.0
+omni_range = 7.0
