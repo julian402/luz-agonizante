@@ -9,6 +9,7 @@
 [ext_resource type="Script" path="res://partida.gd" id="7_partida"]
 [ext_resource type="Script" path="res://salud.gd" id="8_salud"]
 [ext_resource type="PackedScene" path="res://hud.tscn" id="9_hud"]
+[ext_resource type="PackedScene" path="res://coloso.tscn" id="10_coloso"]
 
 [sub_resource type="ProceduralSkyMaterial" id="CieloMat"]
 
@@ -120,3 +121,15 @@ reapariciones = 0
 script = ExtResource("7_partida")
 
 [node name="HUD" parent="." instance=ExtResource("9_hud")]
+
+[node name="Coloso" parent="." instance=ExtResource("10_coloso")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, 0)
+rapidez = 1.5
+rango_ataque = 1.8
+tiempo_aviso = 1.0
+tiempo_recarga = 2.0
+alcance_golpe = 2.2
+danio = 20
+vida = 8.0
+vida_huida = 2.0
+danio_prueba = 1.0
