@@ -1,8 +1,11 @@
 extends CharacterBody3D
 
-enum Estado { ACERCARSE, AVISO, GOLPE, RECARGA, HUIR }
+enum Estado { QUIETO, ACERCARSE, AVISO, GOLPE, RECARGA, HUIR }
 
 @export var rapidez = 2.0
+# Como el Carronero: espera hasta ver a Ceniza y la suelta si se aleja.
+@export var rango_ver = 10.0
+@export var rango_perder = 14.0
 @export var rango_ataque = 1.5
 @export var tiempo_aviso = 0.5
 @export var tiempo_recarga = 1.0
@@ -14,8 +17,10 @@ enum Estado { ACERCARSE, AVISO, GOLPE, RECARGA, HUIR }
 # La luz que suelta al morir.
 @export var orbe_valor = 50
 const ORBE = preload("res://orbe.tscn")
+# true en el jefe: al morir le avisa a la Partida que se cumplio la meta.
+@export var es_meta = false
 
-var estado = Estado.ACERCARSE
+var estado = Estado.QUIETO
 var reloj = 0.0
 var jugador = null
 @onready var anim = $Modelo/AnimationPlayer
@@ -49,6 +54,8 @@ func _physics_process(delta):
 	if nuevo != estado:
 		cambiar_a(nuevo)
 	match estado:
+		Estado.QUIETO:
+			frenar("idle")
 		Estado.ACERCARSE:
 			ir_a(jugador.global_position)
 		Estado.AVISO:
@@ -71,7 +78,12 @@ func decidir():
 	if vida <= vida_huida:
 		return Estado.HUIR
 	match estado:
+		Estado.QUIETO:
+			if distancia() <= rango_ver:
+				return Estado.ACERCARSE
 		Estado.ACERCARSE:
+			if distancia() > rango_perder:
+				return Estado.QUIETO
 			if distancia() <= rango_ataque:
 				return Estado.AVISO
 		Estado.AVISO:
@@ -107,6 +119,10 @@ func recibir_golpe(cuanto):
 	if vida <= 0:
 		print(name, " vencido")
 		soltar_orbe()
+		if es_meta:
+			var partida = get_tree().get_first_node_in_group("partida")
+			if partida != null:
+				partida.avisar_meta()
 		queue_free()
 
 
@@ -144,10 +160,9 @@ func frenar(animacion):
 	anim.play(animacion)
 
 
+# En 3D: el nivel tiene pisos uno encima de otro y no se ve a traves del techo.
 func distancia():
-	var p = jugador.global_position
-	var o = global_position
-	return Vector2(p.x - o.x, p.z - o.z).length()
+	return global_position.distance_to(jugador.global_position)
 
 
 func mostrar_vida():
