@@ -11,6 +11,9 @@ enum Estado { ACERCARSE, AVISO, GOLPE, RECARGA, HUIR }
 @export var vida = 100.0
 @export var vida_huida = 30.0
 @export var danio_prueba = 25.0
+# La luz que suelta al morir.
+@export var orbe_valor = 50
+const ORBE = preload("res://orbe.tscn")
 
 var estado = Estado.ACERCARSE
 var reloj = 0.0
@@ -103,6 +106,7 @@ func recibir_golpe(cuanto):
 	get_tree().create_timer(0.15).timeout.connect(apagar_destello)
 	if vida <= 0:
 		print(name, " vencido")
+		soltar_orbe()
 		queue_free()
 
 
@@ -114,6 +118,14 @@ func golpear():
 	var salud = jugador.get_node_or_null("Salud")
 	if salud != null:
 		salud.recibir_golpe(danio)
+
+
+# Se agrega despues (deferred): morir pasa en medio del rayo del Chispazo.
+func soltar_orbe():
+	var orbe = ORBE.instantiate()
+	orbe.valor = orbe_valor
+	orbe.position = global_position + Vector3(0, 1, 0)
+	get_parent().add_child.call_deferred(orbe)
 
 
 func ir_a(destino):

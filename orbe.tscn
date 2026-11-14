@@ -1,0 +1,31 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://orbe.gd" id="1_orbe"]
+
+[sub_resource type="SphereMesh" id="OrbeMalla"]
+radius = 0.2
+height = 0.4
+
+[sub_resource type="StandardMaterial3D" id="OrbeMat"]
+albedo_color = Color(1, 0.85, 0.5, 1)
+emission_enabled = true
+emission = Color(1, 0.8, 0.4, 1)
+emission_energy_multiplier = 4.0
+
+[sub_resource type="SphereShape3D" id="OrbeForma"]
+radius = 0.5
+
+[node name="Orbe" type="Area3D"]
+script = ExtResource("1_orbe")
+
+[node name="Malla" type="MeshInstance3D" parent="."]
+mesh = SubResource("OrbeMalla")
+surface_material_override/0 = SubResource("OrbeMat")
+
+[node name="Forma" type="CollisionShape3D" parent="."]
+shape = SubResource("OrbeForma")
+
+[node name="Brillo" type="OmniLight3D" parent="."]
+light_color = Color(1, 0.8, 0.4, 1)
+light_energy = 0.8
+omni_range = 2.0
