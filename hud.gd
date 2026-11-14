@@ -2,6 +2,8 @@ extends CanvasLayer
 
 # El HUD no guarda la vida, solo la muestra.
 @onready var texto = $Texto
+# La oscuridad cambia la vida cada cuadro: solo se escribe si cambia el entero.
+var ultimo = -1
 
 
 func _ready():
@@ -13,5 +15,9 @@ func _ready():
 
 
 func mostrar(vida):
-	texto.text = "Vida: " + str(vida)
+	var entero = roundi(vida)
+	if entero == ultimo:
+		return
+	ultimo = entero
+	texto.text = "Vida: " + str(entero)
 	print("HUD -> ", texto.text)
