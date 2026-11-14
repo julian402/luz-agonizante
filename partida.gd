@@ -65,6 +65,19 @@ func terminar(nuevo, motivo):
 	var usado = tiempo_limite - tiempo
 	if estado == Estado.GANO and (mejor == 0.0 or usado < mejor):
 		mejor = usado
+	avisar_hud(motivo, usado)
+
+
+# El texto de fin va en el HUD; si no hay HUD, queda solo el print.
+func avisar_hud(motivo, usado):
+	var hud = get_tree().get_first_node_in_group("hud")
+	if hud == null:
+		return
+	var reloj_texto = "%d:%02d" % [int(usado) / 60, int(usado) % 60]
+	if estado == Estado.GANO:
+		hud.mostrar_fin("GANASTE", "Tiempo " + reloj_texto, Color("#F2C14E"))
+	else:
+		hud.mostrar_fin("PERDISTE", motivo + " · " + reloj_texto, Color("#E8433A"))
 
 func reiniciar():
 	intentos += 1
