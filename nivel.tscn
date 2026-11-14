@@ -1,0 +1,1108 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://antorcha.tscn" id="antorcha"]
+[ext_resource type="PackedScene" path="res://orbe.tscn" id="orbe"]
+[ext_resource type="PackedScene" path="res://carronero.tscn" id="carronero"]
+[ext_resource type="PackedScene" path="res://coloso.tscn" id="coloso"]
+[ext_resource type="Script" path="res://zona_luz.gd" id="zona"]
+[ext_resource type="Script" path="res://luz_parpadeante.gd" id="parpadeo"]
+
+[sub_resource type="StandardMaterial3D" id="s1"]
+albedo_color = Color(0.32, 0.33, 0.36, 1)
+
+[sub_resource type="BoxMesh" id="s2"]
+material = SubResource("s1")
+size = Vector3(16, 1, 3)
+
+[sub_resource type="BoxShape3D" id="s3"]
+size = Vector3(16, 1, 3)
+
+[sub_resource type="StandardMaterial3D" id="s4"]
+albedo_color = Color(0.227, 0.247, 0.294, 1)
+
+[sub_resource type="BoxMesh" id="s5"]
+material = SubResource("s4")
+size = Vector3(16, 10, 0.2)
+
+[sub_resource type="StandardMaterial3D" id="s6"]
+albedo_color = Color(0.12, 0.1, 0.09, 1)
+
+[sub_resource type="BoxMesh" id="s7"]
+material = SubResource("s6")
+size = Vector3(0.4, 4, 0.2)
+
+[sub_resource type="BoxMesh" id="s8"]
+material = SubResource("s1")
+size = Vector3(36, 1, 3)
+
+[sub_resource type="BoxShape3D" id="s9"]
+size = Vector3(36, 1, 3)
+
+[sub_resource type="BoxMesh" id="s10"]
+material = SubResource("s4")
+size = Vector3(36, 10, 0.2)
+
+[sub_resource type="StandardMaterial3D" id="s11"]
+albedo_color = Color(0.85, 0.55, 0.25, 1)
+
+[sub_resource type="BoxMesh" id="s12"]
+material = SubResource("s11")
+size = Vector3(1, 1, 1)
+
+[sub_resource type="BoxShape3D" id="s13"]
+size = Vector3(1, 1, 1)
+
+[sub_resource type="StandardMaterial3D" id="s14"]
+albedo_color = Color(0.28, 0.24, 0.2, 1)
+
+[sub_resource type="BoxMesh" id="s15"]
+material = SubResource("s14")
+size = Vector3(36, 1, 3)
+
+[sub_resource type="StandardMaterial3D" id="s16"]
+albedo_color = Color(0.2, 0.17, 0.15, 1)
+
+[sub_resource type="BoxMesh" id="s17"]
+material = SubResource("s16")
+size = Vector3(36, 10, 0.2)
+
+[sub_resource type="StandardMaterial3D" id="s18"]
+albedo_color = Color(1, 0.85, 0.55, 1)
+emission_enabled = true
+emission = Color(1, 0.8, 0.45, 1)
+emission_energy_multiplier = 4.0
+
+[sub_resource type="SphereMesh" id="s19"]
+material = SubResource("s18")
+radius = 0.4
+height = 0.8
+
+[sub_resource type="CylinderShape3D" id="s20"]
+height = 6.0
+radius = 8.0
+
+[sub_resource type="BoxMesh" id="s21"]
+material = SubResource("s14")
+size = Vector3(30, 1, 3)
+
+[sub_resource type="BoxShape3D" id="s22"]
+size = Vector3(30, 1, 3)
+
+[sub_resource type="BoxMesh" id="s23"]
+material = SubResource("s16")
+size = Vector3(30, 10, 0.2)
+
+[sub_resource type="BoxMesh" id="s24"]
+material = SubResource("s14")
+size = Vector3(16, 1, 3)
+
+[sub_resource type="BoxMesh" id="s25"]
+material = SubResource("s16")
+size = Vector3(16, 10, 0.2)
+
+[sub_resource type="StandardMaterial3D" id="s26"]
+albedo_color = Color(0.45, 0.4, 0.35, 1)
+
+[sub_resource type="BoxMesh" id="s27"]
+material = SubResource("s26")
+size = Vector3(3, 1.3, 3)
+
+[sub_resource type="BoxShape3D" id="s28"]
+size = Vector3(3, 1.3, 3)
+
+[sub_resource type="BoxMesh" id="s29"]
+material = SubResource("s26")
+size = Vector3(3, 0.4, 3)
+
+[sub_resource type="BoxShape3D" id="s30"]
+size = Vector3(3, 0.4, 3)
+
+[sub_resource type="BoxMesh" id="s31"]
+material = SubResource("s26")
+size = Vector3(4, 0.4, 3)
+
+[sub_resource type="BoxShape3D" id="s32"]
+size = Vector3(4, 0.4, 3)
+
+[sub_resource type="BoxMesh" id="s33"]
+material = SubResource("s26")
+size = Vector3(5, 0.4, 3)
+
+[sub_resource type="BoxShape3D" id="s34"]
+size = Vector3(5, 0.4, 3)
+
+[sub_resource type="BoxMesh" id="s35"]
+material = SubResource("s26")
+size = Vector3(5, 0.4, 3)
+
+[sub_resource type="BoxShape3D" id="s36"]
+size = Vector3(5, 0.4, 3)
+
+[sub_resource type="BoxMesh" id="s37"]
+material = SubResource("s26")
+size = Vector3(5.5, 0.4, 3)
+
+[sub_resource type="BoxShape3D" id="s38"]
+size = Vector3(5.5, 0.4, 3)
+
+[sub_resource type="StandardMaterial3D" id="s39"]
+albedo_color = Color(0.24, 0.19, 0.3, 1)
+
+[sub_resource type="BoxMesh" id="s40"]
+material = SubResource("s39")
+size = Vector3(30, 1, 3)
+
+[sub_resource type="StandardMaterial3D" id="s41"]
+albedo_color = Color(0.17, 0.13, 0.22, 1)
+
+[sub_resource type="BoxMesh" id="s42"]
+material = SubResource("s41")
+size = Vector3(30, 10, 0.2)
+
+[sub_resource type="BoxMesh" id="s43"]
+material = SubResource("s39")
+size = Vector3(14, 1, 3)
+
+[sub_resource type="BoxShape3D" id="s44"]
+size = Vector3(14, 1, 3)
+
+[sub_resource type="BoxMesh" id="s45"]
+material = SubResource("s41")
+size = Vector3(14, 10, 0.2)
+
+[sub_resource type="BoxMesh" id="s46"]
+material = SubResource("s6")
+size = Vector3(1, 12, 3)
+
+[sub_resource type="BoxShape3D" id="s47"]
+size = Vector3(1, 12, 3)
+
+[sub_resource type="BoxMesh" id="s48"]
+material = SubResource("s6")
+size = Vector3(1, 24, 3)
+
+[sub_resource type="BoxShape3D" id="s49"]
+size = Vector3(1, 24, 3)
+
+[node name="Nivel" type="Node3D"]
+
+[node name="Zona1" type="Node3D" parent="."]
+
+[node name="Entrada" type="Node3D" parent="Zona1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+
+[node name="Piso" type="StaticBody3D" parent="Zona1/Entrada"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, -0.5, 0)
+
+[node name="Malla" type="MeshInstance3D" parent="Zona1/Entrada/Piso"]
+mesh = SubResource("s2")
+
+[node name="Forma" type="CollisionShape3D" parent="Zona1/Entrada/Piso"]
+shape = SubResource("s3")
+
+[node name="Fondo" type="MeshInstance3D" parent="Zona1/Entrada"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 5, -1.6)
+mesh = SubResource("s5")
+
+[node name="Marco" type="MeshInstance3D" parent="Zona1/Entrada"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, -1.4)
+mesh = SubResource("s7")
+
+[node name="Nombre" type="Label3D" parent="Zona1/Entrada"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 4.6, -1.45)
+pixel_size = 0.01
+modulate = Color(0.85, 0.8, 0.7, 0.6)
+font_size = 64
+outline_size = 0
+text = "Entrada"
+
+[node name="Antorcha1" parent="Zona1/Entrada" instance=ExtResource("antorcha")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, 0)
+
+[node name="Antorcha2" parent="Zona1/Entrada" instance=ExtResource("antorcha")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0, 0)
+
+[node name="Catacumbas1" type="Node3D" parent="Zona1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 0, 0)
+
+[node name="Piso" type="StaticBody3D" parent="Zona1/Catacumbas1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, -0.5, 0)
+
+[node name="Malla" type="MeshInstance3D" parent="Zona1/Catacumbas1/Piso"]
+mesh = SubResource("s8")
+
+[node name="Forma" type="CollisionShape3D" parent="Zona1/Catacumbas1/Piso"]
+shape = SubResource("s9")
+
+[node name="Fondo" type="MeshInstance3D" parent="Zona1/Catacumbas1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 5, -1.6)
+mesh = SubResource("s10")
+
+[node name="Marco" type="MeshInstance3D" parent="Zona1/Catacumbas1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, -1.4)
+mesh = SubResource("s7")
+
+[node name="Nombre" type="Label3D" parent="Zona1/Catacumbas1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 4.6, -1.45)
+pixel_size = 0.01
+modulate = Color(0.85, 0.8, 0.7, 0.6)
+font_size = 64
+outline_size = 0
+text = "Catacumbas 1"
+
+[node name="Antorcha1" parent="Zona1/Catacumbas1" instance=ExtResource("antorcha")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0, 0)
+
+[node name="Antorcha2" parent="Zona1/Catacumbas1" instance=ExtResource("antorcha")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 0, 0)
+
+[node name="Antorcha3" parent="Zona1/Catacumbas1" instance=ExtResource("antorcha")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30, 0, 0)
+
+[node name="Orbe1" parent="Zona1/Catacumbas1" instance=ExtResource("orbe")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 0.8, 0)
+valor = 30
+
+[node name="Caja1" type="StaticBody3D" parent="Zona1/Catacumbas1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 0.5, 0)
+
+[node name="Malla" type="MeshInstance3D" parent="Zona1/Catacumbas1/Caja1"]
+mesh = SubResource("s12")
+
+[node name="Forma" type="CollisionShape3D" parent="Zona1/Catacumbas1/Caja1"]
+shape = SubResource("s13")
+
+[node name="Catacumbas2" type="Node3D" parent="Zona1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 52, 0, 0)
+
+[node name="Piso" type="StaticBody3D" parent="Zona1/Catacumbas2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, -0.5, 0)
+
+[node name="Malla" type="MeshInstance3D" parent="Zona1/Catacumbas2/Piso"]
+mesh = SubResource("s8")
+
+[node name="Forma" type="CollisionShape3D" parent="Zona1/Catacumbas2/Piso"]
+shape = SubResource("s9")
+
+[node name="Fondo" type="MeshInstance3D" parent="Zona1/Catacumbas2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 5, -1.6)
+mesh = SubResource("s10")
+
+[node name="Marco" type="MeshInstance3D" parent="Zona1/Catacumbas2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, -1.4)
+mesh = SubResource("s7")
+
+[node name="Nombre" type="Label3D" parent="Zona1/Catacumbas2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 4.6, -1.45)
+pixel_size = 0.01
+modulate = Color(0.85, 0.8, 0.7, 0.6)
+font_size = 64
+outline_size = 0
+text = "Catacumbas 2"
+
+[node name="Antorcha1" parent="Zona1/Catacumbas2" instance=ExtResource("antorcha")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0, 0)
+
+[node name="Antorcha2" parent="Zona1/Catacumbas2" instance=ExtResource("antorcha")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 0, 0)
+
+[node name="Antorcha3" parent="Zona1/Catacumbas2" instance=ExtResource("antorcha")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30, 0, 0)
+
+[node name="Orbe1" parent="Zona1/Catacumbas2" instance=ExtResource("orbe")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0.8, 0)
+valor = 30
+
+[node name="Carronero1" parent="Zona1/Catacumbas2" instance=ExtResource("carronero")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22, 0, 0)
+
+[node name="Caja1" type="StaticBody3D" parent="Zona1/Catacumbas2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28, 0.5, 0)
+
+[node name="Malla" type="MeshInstance3D" parent="Zona1/Catacumbas2/Caja1"]
+mesh = SubResource("s12")
+
+[node name="Forma" type="CollisionShape3D" parent="Zona1/Catacumbas2/Caja1"]
+shape = SubResource("s13")
+
+[node name="Catacumbas3" type="Node3D" parent="Zona1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 88, 0, 0)
+
+[node name="Piso" type="StaticBody3D" parent="Zona1/Catacumbas3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, -0.5, 0)
+
+[node name="Malla" type="MeshInstance3D" parent="Zona1/Catacumbas3/Piso"]
+mesh = SubResource("s8")
+
+[node name="Forma" type="CollisionShape3D" parent="Zona1/Catacumbas3/Piso"]
+shape = SubResource("s9")
+
+[node name="Fondo" type="MeshInstance3D" parent="Zona1/Catacumbas3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 5, -1.6)
+mesh = SubResource("s10")
+
+[node name="Marco" type="MeshInstance3D" parent="Zona1/Catacumbas3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, -1.4)
+mesh = SubResource("s7")
+
+[node name="Nombre" type="Label3D" parent="Zona1/Catacumbas3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 4.6, -1.45)
+pixel_size = 0.01
+modulate = Color(0.85, 0.8, 0.7, 0.6)
+font_size = 64
+outline_size = 0
+text = "Catacumbas 3"
+
+[node name="Antorcha1" parent="Zona1/Catacumbas3" instance=ExtResource("antorcha")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0, 0)
+
+[node name="Antorcha2" parent="Zona1/Catacumbas3" instance=ExtResource("antorcha")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 0, 0)
+
+[node name="Antorcha3" parent="Zona1/Catacumbas3" instance=ExtResource("antorcha")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30, 0, 0)
+
+[node name="Orbe1" parent="Zona1/Catacumbas3" instance=ExtResource("orbe")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30, 0.8, 0)
+valor = 30
+
+[node name="Carronero1" parent="Zona1/Catacumbas3" instance=ExtResource("carronero")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 0, 0)
+
+[node name="Carronero2" parent="Zona1/Catacumbas3" instance=ExtResource("carronero")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 0, 0)
+
+[node name="Caja1" type="StaticBody3D" parent="Zona1/Catacumbas3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 0.5, 0)
+
+[node name="Malla" type="MeshInstance3D" parent="Zona1/Catacumbas3/Caja1"]
+mesh = SubResource("s12")
+
+[node name="Forma" type="CollisionShape3D" parent="Zona1/Catacumbas3/Caja1"]
+shape = SubResource("s13")
+
+[node name="Catacumbas4" type="Node3D" parent="Zona1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 124, 0, 0)
+
+[node name="Piso" type="StaticBody3D" parent="Zona1/Catacumbas4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, -0.5, 0)
+
+[node name="Malla" type="MeshInstance3D" parent="Zona1/Catacumbas4/Piso"]
+mesh = SubResource("s8")
+
+[node name="Forma" type="CollisionShape3D" parent="Zona1/Catacumbas4/Piso"]
+shape = SubResource("s9")
+
+[node name="Fondo" type="MeshInstance3D" parent="Zona1/Catacumbas4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 5, -1.6)
+mesh = SubResource("s10")
+
+[node name="Marco" type="MeshInstance3D" parent="Zona1/Catacumbas4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, -1.4)
+mesh = SubResource("s7")
+
+[node name="Nombre" type="Label3D" parent="Zona1/Catacumbas4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 4.6, -1.45)
+pixel_size = 0.01
+modulate = Color(0.85, 0.8, 0.7, 0.6)
+font_size = 64
+outline_size = 0
+text = "Catacumbas 4"
+
+[node name="Antorcha1" parent="Zona1/Catacumbas4" instance=ExtResource("antorcha")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0, 0)
+
+[node name="Antorcha2" parent="Zona1/Catacumbas4" instance=ExtResource("antorcha")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 0, 0)
+
+[node name="Antorcha3" parent="Zona1/Catacumbas4" instance=ExtResource("antorcha")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30, 0, 0)
+
+[node name="Orbe1" parent="Zona1/Catacumbas4" instance=ExtResource("orbe")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0.8, 0)
+valor = 30
+
+[node name="Carronero1" parent="Zona1/Catacumbas4" instance=ExtResource("carronero")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 0, 0)
+
+[node name="Carronero2" parent="Zona1/Catacumbas4" instance=ExtResource("carronero")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28, 0, 0)
+
+[node name="Caja1" type="StaticBody3D" parent="Zona1/Catacumbas4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 0.5, 0)
+
+[node name="Malla" type="MeshInstance3D" parent="Zona1/Catacumbas4/Caja1"]
+mesh = SubResource("s12")
+
+[node name="Forma" type="CollisionShape3D" parent="Zona1/Catacumbas4/Caja1"]
+shape = SubResource("s13")
+
+[node name="Zona2" type="Node3D" parent="."]
+
+[node name="Catacumbas5" type="Node3D" parent="Zona2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 128, -12, 0)
+
+[node name="Piso" type="StaticBody3D" parent="Zona2/Catacumbas5"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, -0.5, 0)
+
+[node name="Malla" type="MeshInstance3D" parent="Zona2/Catacumbas5/Piso"]
+mesh = SubResource("s15")
+
+[node name="Forma" type="CollisionShape3D" parent="Zona2/Catacumbas5/Piso"]
+shape = SubResource("s9")
+
+[node name="Fondo" type="MeshInstance3D" parent="Zona2/Catacumbas5"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 5, -1.6)
+mesh = SubResource("s17")
+
+[node name="Marco" type="MeshInstance3D" parent="Zona2/Catacumbas5"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 36, 2, -1.4)
+mesh = SubResource("s7")
+
+[node name="Nombre" type="Label3D" parent="Zona2/Catacumbas5"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 4.6, -1.45)
+pixel_size = 0.01
+modulate = Color(0.85, 0.8, 0.7, 0.6)
+font_size = 64
+outline_size = 0
+text = "Catacumbas 5 - lampara"
+
+[node name="Antorcha1" parent="Zona2/Catacumbas5" instance=ExtResource("antorcha")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 32, 0, 0)
+
+[node name="Antorcha2" parent="Zona2/Catacumbas5" instance=ExtResource("antorcha")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, 0)
+
+[node name="Orbe1" parent="Zona2/Catacumbas5" instance=ExtResource("orbe")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 0.8, 0)
+valor = 30
+
+[node name="Lampara1" type="Node3D" parent="Zona2/Catacumbas5"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 0, 0)
+
+[node name="Luz" type="OmniLight3D" parent="Zona2/Catacumbas5/Lampara1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4, -0.8)
+light_color = Color(1, 0.85, 0.55, 1)
+light_energy = 3.0
+omni_range = 10.0
+script = ExtResource("parpadeo")
+energia_base = 3.0
+amplitud = 0.1
+
+[node name="Llama" type="MeshInstance3D" parent="Zona2/Catacumbas5/Lampara1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4, -1.2)
+mesh = SubResource("s19")
+
+[node name="ZonaLuz" type="Area3D" parent="Zona2/Catacumbas5/Lampara1"]
+script = ExtResource("zona")
+
+[node name="Forma" type="CollisionShape3D" parent="Zona2/Catacumbas5/Lampara1/ZonaLuz"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+shape = SubResource("s20")
+
+[node name="Catacumbas6" type="Node3D" parent="Zona2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 92, -12, 0)
+
+[node name="Piso" type="StaticBody3D" parent="Zona2/Catacumbas6"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, -0.5, 0)
+
+[node name="Malla" type="MeshInstance3D" parent="Zona2/Catacumbas6/Piso"]
+mesh = SubResource("s15")
+
+[node name="Forma" type="CollisionShape3D" parent="Zona2/Catacumbas6/Piso"]
+shape = SubResource("s9")
+
+[node name="Fondo" type="MeshInstance3D" parent="Zona2/Catacumbas6"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 5, -1.6)
+mesh = SubResource("s17")
+
+[node name="Marco" type="MeshInstance3D" parent="Zona2/Catacumbas6"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 36, 2, -1.4)
+mesh = SubResource("s7")
+
+[node name="Nombre" type="Label3D" parent="Zona2/Catacumbas6"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 4.6, -1.45)
+pixel_size = 0.01
+modulate = Color(0.85, 0.8, 0.7, 0.6)
+font_size = 64
+outline_size = 0
+text = "Catacumbas 6 - primer Coloso"
+
+[node name="Antorcha1" parent="Zona2/Catacumbas6" instance=ExtResource("antorcha")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30, 0, 0)
+
+[node name="Antorcha2" parent="Zona2/Catacumbas6" instance=ExtResource("antorcha")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 0, 0)
+
+[node name="Antorcha3" parent="Zona2/Catacumbas6" instance=ExtResource("antorcha")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0, 0)
+
+[node name="Orbe1" parent="Zona2/Catacumbas6" instance=ExtResource("orbe")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26, 0.8, 0)
+valor = 30
+
+[node name="Coloso1" parent="Zona2/Catacumbas6" instance=ExtResource("coloso")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0, 0)
+axis_lock_linear_z = true
+rapidez = 2.0
+rango_ataque = 2.5
+tiempo_aviso = 1.0
+tiempo_recarga = 2.5
+alcance_golpe = 3.0
+danio = 20
+vida = 8.0
+vida_huida = 0.0
+
+[node name="Fondo1" type="Node3D" parent="Zona2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 62, -12, 0)
+
+[node name="Piso" type="StaticBody3D" parent="Zona2/Fondo1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, -0.5, 0)
+
+[node name="Malla" type="MeshInstance3D" parent="Zona2/Fondo1/Piso"]
+mesh = SubResource("s21")
+
+[node name="Forma" type="CollisionShape3D" parent="Zona2/Fondo1/Piso"]
+shape = SubResource("s22")
+
+[node name="Fondo" type="MeshInstance3D" parent="Zona2/Fondo1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 5, -1.6)
+mesh = SubResource("s23")
+
+[node name="Marco" type="MeshInstance3D" parent="Zona2/Fondo1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30, 2, -1.4)
+mesh = SubResource("s7")
+
+[node name="Nombre" type="Label3D" parent="Zona2/Fondo1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 4.6, -1.45)
+pixel_size = 0.01
+modulate = Color(0.85, 0.8, 0.7, 0.6)
+font_size = 64
+outline_size = 0
+text = "Fondo 1 - hueco oscuro"
+
+[node name="Antorcha1" parent="Zona2/Fondo1" instance=ExtResource("antorcha")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 27, 0, 0)
+
+[node name="Antorcha2" parent="Zona2/Fondo1" instance=ExtResource("antorcha")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, 0)
+
+[node name="Orbe1" parent="Zona2/Fondo1" instance=ExtResource("orbe")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0.8, 0)
+valor = 30
+
+[node name="Carronero1" parent="Zona2/Fondo1" instance=ExtResource("carronero")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 0, 0)
+
+[node name="Fondo2" type="Node3D" parent="Zona2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 32, -12, 0)
+
+[node name="Piso" type="StaticBody3D" parent="Zona2/Fondo2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, -0.5, 0)
+
+[node name="Malla" type="MeshInstance3D" parent="Zona2/Fondo2/Piso"]
+mesh = SubResource("s21")
+
+[node name="Forma" type="CollisionShape3D" parent="Zona2/Fondo2/Piso"]
+shape = SubResource("s22")
+
+[node name="Fondo" type="MeshInstance3D" parent="Zona2/Fondo2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 5, -1.6)
+mesh = SubResource("s23")
+
+[node name="Marco" type="MeshInstance3D" parent="Zona2/Fondo2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30, 2, -1.4)
+mesh = SubResource("s7")
+
+[node name="Nombre" type="Label3D" parent="Zona2/Fondo2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 4.6, -1.45)
+pixel_size = 0.01
+modulate = Color(0.85, 0.8, 0.7, 0.6)
+font_size = 64
+outline_size = 0
+text = "Fondo 2 - Coloso a oscuras"
+
+[node name="Antorcha1" parent="Zona2/Fondo2" instance=ExtResource("antorcha")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 27, 0, 0)
+
+[node name="Antorcha2" parent="Zona2/Fondo2" instance=ExtResource("antorcha")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, 0)
+
+[node name="Orbe1" parent="Zona2/Fondo2" instance=ExtResource("orbe")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 27, 0.8, 0)
+valor = 30
+
+[node name="Coloso1" parent="Zona2/Fondo2" instance=ExtResource("coloso")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 0, 0)
+axis_lock_linear_z = true
+rapidez = 2.0
+rango_ataque = 2.5
+tiempo_aviso = 1.0
+tiempo_recarga = 2.5
+alcance_golpe = 3.0
+danio = 20
+vida = 8.0
+vida_huida = 0.0
+
+[node name="Fondo3" type="Node3D" parent="Zona2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, -12, 0)
+
+[node name="Piso" type="StaticBody3D" parent="Zona2/Fondo3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, -0.5, 0)
+
+[node name="Malla" type="MeshInstance3D" parent="Zona2/Fondo3/Piso"]
+mesh = SubResource("s21")
+
+[node name="Forma" type="CollisionShape3D" parent="Zona2/Fondo3/Piso"]
+shape = SubResource("s22")
+
+[node name="Fondo" type="MeshInstance3D" parent="Zona2/Fondo3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 5, -1.6)
+mesh = SubResource("s23")
+
+[node name="Marco" type="MeshInstance3D" parent="Zona2/Fondo3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30, 2, -1.4)
+mesh = SubResource("s7")
+
+[node name="Nombre" type="Label3D" parent="Zona2/Fondo3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 4.6, -1.45)
+pixel_size = 0.01
+modulate = Color(0.85, 0.8, 0.7, 0.6)
+font_size = 64
+outline_size = 0
+text = "Fondo 3 - entrar o guardar la antorcha"
+
+[node name="Antorcha1" parent="Zona2/Fondo3" instance=ExtResource("antorcha")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 0, 0)
+
+[node name="Antorcha2" parent="Zona2/Fondo3" instance=ExtResource("antorcha")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0, 0)
+
+[node name="Orbe1" parent="Zona2/Fondo3" instance=ExtResource("orbe")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0.8, 0)
+valor = 30
+
+[node name="Carronero1" parent="Zona2/Fondo3" instance=ExtResource("carronero")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 0, 0)
+
+[node name="Carronero2" parent="Zona2/Fondo3" instance=ExtResource("carronero")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 0, 0)
+
+[node name="Fondo4" type="Node3D" parent="Zona2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14, -12, 0)
+
+[node name="Piso" type="StaticBody3D" parent="Zona2/Fondo4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, -0.5, 0)
+
+[node name="Malla" type="MeshInstance3D" parent="Zona2/Fondo4/Piso"]
+mesh = SubResource("s24")
+
+[node name="Forma" type="CollisionShape3D" parent="Zona2/Fondo4/Piso"]
+shape = SubResource("s3")
+
+[node name="Fondo" type="MeshInstance3D" parent="Zona2/Fondo4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 5, -1.6)
+mesh = SubResource("s25")
+
+[node name="Marco" type="MeshInstance3D" parent="Zona2/Fondo4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 2, -1.4)
+mesh = SubResource("s7")
+
+[node name="Nombre" type="Label3D" parent="Zona2/Fondo4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 4.6, -1.45)
+pixel_size = 0.01
+modulate = Color(0.85, 0.8, 0.7, 0.6)
+font_size = 64
+outline_size = 0
+text = "Fondo 4 - respiro"
+
+[node name="Antorcha1" parent="Zona2/Fondo4" instance=ExtResource("antorcha")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0, 0)
+
+[node name="Antorcha2" parent="Zona2/Fondo4" instance=ExtResource("antorcha")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, 0)
+
+[node name="Orbe1" parent="Zona2/Fondo4" instance=ExtResource("orbe")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 0.8, 0)
+valor = 30
+
+[node name="Orbe2" parent="Zona2/Fondo4" instance=ExtResource("orbe")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0.8, 0)
+valor = 30
+
+[node name="Fondo5" type="Node3D" parent="Zona2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -30, -12, 0)
+
+[node name="Piso" type="StaticBody3D" parent="Zona2/Fondo5"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, -0.5, 0)
+
+[node name="Malla" type="MeshInstance3D" parent="Zona2/Fondo5/Piso"]
+mesh = SubResource("s24")
+
+[node name="Forma" type="CollisionShape3D" parent="Zona2/Fondo5/Piso"]
+shape = SubResource("s3")
+
+[node name="Fondo" type="MeshInstance3D" parent="Zona2/Fondo5"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 5, -1.6)
+mesh = SubResource("s25")
+
+[node name="Marco" type="MeshInstance3D" parent="Zona2/Fondo5"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 2, -1.4)
+mesh = SubResource("s7")
+
+[node name="Nombre" type="Label3D" parent="Zona2/Fondo5"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 4.6, -1.45)
+pixel_size = 0.01
+modulate = Color(0.85, 0.8, 0.7, 0.6)
+font_size = 64
+outline_size = 0
+text = "Fondo 5 - arriba o abajo"
+
+[node name="Antorcha1" parent="Zona2/Fondo5" instance=ExtResource("antorcha")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0, 0)
+
+[node name="Escalon1" type="StaticBody3D" parent="Zona2/Fondo5"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.5, 0.65, 0)
+
+[node name="Malla" type="MeshInstance3D" parent="Zona2/Fondo5/Escalon1"]
+mesh = SubResource("s27")
+
+[node name="Forma" type="CollisionShape3D" parent="Zona2/Fondo5/Escalon1"]
+shape = SubResource("s28")
+
+[node name="Escalon2" type="StaticBody3D" parent="Zona2/Fondo5"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 2.4, 0)
+
+[node name="Malla" type="MeshInstance3D" parent="Zona2/Fondo5/Escalon2"]
+mesh = SubResource("s29")
+
+[node name="Forma" type="CollisionShape3D" parent="Zona2/Fondo5/Escalon2"]
+shape = SubResource("s30")
+
+[node name="Escalon3" type="StaticBody3D" parent="Zona2/Fondo5"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 3.8, 0)
+
+[node name="Malla" type="MeshInstance3D" parent="Zona2/Fondo5/Escalon3"]
+mesh = SubResource("s31")
+
+[node name="Forma" type="CollisionShape3D" parent="Zona2/Fondo5/Escalon3"]
+shape = SubResource("s32")
+
+[node name="Bifurcacion" type="Node3D" parent="Zona2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -60, -12, 0)
+
+[node name="Piso" type="StaticBody3D" parent="Zona2/Bifurcacion"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, -0.5, 0)
+
+[node name="Malla" type="MeshInstance3D" parent="Zona2/Bifurcacion/Piso"]
+mesh = SubResource("s21")
+
+[node name="Forma" type="CollisionShape3D" parent="Zona2/Bifurcacion/Piso"]
+shape = SubResource("s22")
+
+[node name="Fondo" type="MeshInstance3D" parent="Zona2/Bifurcacion"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 5, -1.6)
+mesh = SubResource("s23")
+
+[node name="Marco" type="MeshInstance3D" parent="Zona2/Bifurcacion"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30, 2, -1.4)
+mesh = SubResource("s7")
+
+[node name="Nombre" type="Label3D" parent="Zona2/Bifurcacion"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 3.6, -1.45)
+pixel_size = 0.01
+modulate = Color(0.85, 0.8, 0.7, 0.6)
+font_size = 64
+outline_size = 0
+text = "Piso pelea total"
+
+[node name="Nombre2" type="Label3D" parent="Zona2/Bifurcacion"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 8.6, -1.45)
+pixel_size = 0.01
+modulate = Color(0.85, 0.8, 0.7, 0.6)
+font_size = 64
+outline_size = 0
+text = "Cornisa de salto"
+
+[node name="Antorcha1" parent="Zona2/Bifurcacion" instance=ExtResource("antorcha")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26, 0, 0)
+
+[node name="Antorcha2" parent="Zona2/Bifurcacion" instance=ExtResource("antorcha")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, 0)
+
+[node name="Orbe1" parent="Zona2/Bifurcacion" instance=ExtResource("orbe")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17, 0.8, 0)
+valor = 30
+
+[node name="Orbe2" parent="Zona2/Bifurcacion" instance=ExtResource("orbe")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0.8, 0)
+valor = 30
+
+[node name="Carronero1" parent="Zona2/Bifurcacion" instance=ExtResource("carronero")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 0, 0)
+
+[node name="Carronero2" parent="Zona2/Bifurcacion" instance=ExtResource("carronero")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 0, 0)
+
+[node name="Carronero3" parent="Zona2/Bifurcacion" instance=ExtResource("carronero")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0, 0)
+
+[node name="Coloso1" parent="Zona2/Bifurcacion" instance=ExtResource("coloso")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 0, 0)
+axis_lock_linear_z = true
+rapidez = 2.0
+rango_ataque = 2.5
+tiempo_aviso = 1.0
+tiempo_recarga = 2.5
+alcance_golpe = 3.0
+danio = 20
+vida = 8.0
+vida_huida = 0.0
+
+[node name="Cornisa1" type="StaticBody3D" parent="Zona2/Bifurcacion"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 27.5, 3.8, 0)
+
+[node name="Malla" type="MeshInstance3D" parent="Zona2/Bifurcacion/Cornisa1"]
+mesh = SubResource("s33")
+
+[node name="Forma" type="CollisionShape3D" parent="Zona2/Bifurcacion/Cornisa1"]
+shape = SubResource("s34")
+
+[node name="Cornisa2" type="StaticBody3D" parent="Zona2/Bifurcacion"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 3.8, 0)
+
+[node name="Malla" type="MeshInstance3D" parent="Zona2/Bifurcacion/Cornisa2"]
+mesh = SubResource("s35")
+
+[node name="Forma" type="CollisionShape3D" parent="Zona2/Bifurcacion/Cornisa2"]
+shape = SubResource("s36")
+
+[node name="Cornisa3" type="StaticBody3D" parent="Zona2/Bifurcacion"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.5, 3.8, 0)
+
+[node name="Malla" type="MeshInstance3D" parent="Zona2/Bifurcacion/Cornisa3"]
+mesh = SubResource("s33")
+
+[node name="Forma" type="CollisionShape3D" parent="Zona2/Bifurcacion/Cornisa3"]
+shape = SubResource("s34")
+
+[node name="Cornisa4" type="StaticBody3D" parent="Zona2/Bifurcacion"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.75, 3.8, 0)
+
+[node name="Malla" type="MeshInstance3D" parent="Zona2/Bifurcacion/Cornisa4"]
+mesh = SubResource("s37")
+
+[node name="Forma" type="CollisionShape3D" parent="Zona2/Bifurcacion/Cornisa4"]
+shape = SubResource("s38")
+
+[node name="OrbeCornisa1" parent="Zona2/Bifurcacion" instance=ExtResource("orbe")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 4.8, 0)
+valor = 30
+
+[node name="OrbeCornisa2" parent="Zona2/Bifurcacion" instance=ExtResource("orbe")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 4.8, 0)
+valor = 30
+
+[node name="Fondo6" type="Node3D" parent="Zona2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -76, -12, 0)
+
+[node name="Piso" type="StaticBody3D" parent="Zona2/Fondo6"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, -0.5, 0)
+
+[node name="Malla" type="MeshInstance3D" parent="Zona2/Fondo6/Piso"]
+mesh = SubResource("s24")
+
+[node name="Forma" type="CollisionShape3D" parent="Zona2/Fondo6/Piso"]
+shape = SubResource("s3")
+
+[node name="Fondo" type="MeshInstance3D" parent="Zona2/Fondo6"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 5, -1.6)
+mesh = SubResource("s25")
+
+[node name="Marco" type="MeshInstance3D" parent="Zona2/Fondo6"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 2, -1.4)
+mesh = SubResource("s7")
+
+[node name="Nombre" type="Label3D" parent="Zona2/Fondo6"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 4.6, -1.45)
+pixel_size = 0.01
+modulate = Color(0.85, 0.8, 0.7, 0.6)
+font_size = 64
+outline_size = 0
+text = "Fondo 6 - respiro"
+
+[node name="Antorcha1" parent="Zona2/Fondo6" instance=ExtResource("antorcha")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0, 0)
+
+[node name="Antorcha2" parent="Zona2/Fondo6" instance=ExtResource("antorcha")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, 0)
+
+[node name="Orbe1" parent="Zona2/Fondo6" instance=ExtResource("orbe")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 0.8, 0)
+valor = 30
+
+[node name="Orbe2" parent="Zona2/Fondo6" instance=ExtResource("orbe")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0.8, 0)
+valor = 30
+
+[node name="Zona3" type="Node3D" parent="."]
+
+[node name="SombraMadre" type="Node3D" parent="Zona3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -80, -24, 0)
+
+[node name="Piso" type="StaticBody3D" parent="Zona3/SombraMadre"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, -0.5, 0)
+
+[node name="Malla" type="MeshInstance3D" parent="Zona3/SombraMadre/Piso"]
+mesh = SubResource("s40")
+
+[node name="Forma" type="CollisionShape3D" parent="Zona3/SombraMadre/Piso"]
+shape = SubResource("s22")
+
+[node name="Fondo" type="MeshInstance3D" parent="Zona3/SombraMadre"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 5, -1.6)
+mesh = SubResource("s42")
+
+[node name="Marco" type="MeshInstance3D" parent="Zona3/SombraMadre"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, -1.4)
+mesh = SubResource("s7")
+
+[node name="Nombre" type="Label3D" parent="Zona3/SombraMadre"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 4.6, -1.45)
+pixel_size = 0.01
+modulate = Color(0.85, 0.8, 0.7, 0.6)
+font_size = 64
+outline_size = 0
+text = "Sombra Madre"
+
+[node name="Antorcha1" parent="Zona3/SombraMadre" instance=ExtResource("antorcha")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, 0)
+
+[node name="Antorcha2" parent="Zona3/SombraMadre" instance=ExtResource("antorcha")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, 0, 0)
+
+[node name="Antorcha3" parent="Zona3/SombraMadre" instance=ExtResource("antorcha")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 0, 0)
+
+[node name="Antorcha4" parent="Zona3/SombraMadre" instance=ExtResource("antorcha")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21, 0, 0)
+
+[node name="Antorcha5" parent="Zona3/SombraMadre" instance=ExtResource("antorcha")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 27, 0, 0)
+
+[node name="Orbe1" parent="Zona3/SombraMadre" instance=ExtResource("orbe")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0.8, 0)
+valor = 30
+
+[node name="SombraMadre" parent="Zona3/SombraMadre" instance=ExtResource("coloso")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22, 0, 0)
+axis_lock_linear_z = true
+rapidez = 2.0
+rango_ataque = 2.5
+tiempo_aviso = 1.0
+tiempo_recarga = 2.0
+alcance_golpe = 3.0
+danio = 20
+vida = 40.0
+vida_huida = 0.0
+orbe_valor = 0
+es_meta = true
+
+[node name="Faro" type="Node3D" parent="Zona3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -50, -24, 0)
+
+[node name="Piso" type="StaticBody3D" parent="Zona3/Faro"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, -0.5, 0)
+
+[node name="Malla" type="MeshInstance3D" parent="Zona3/Faro/Piso"]
+mesh = SubResource("s43")
+
+[node name="Forma" type="CollisionShape3D" parent="Zona3/Faro/Piso"]
+shape = SubResource("s44")
+
+[node name="Fondo" type="MeshInstance3D" parent="Zona3/Faro"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 5, -1.6)
+mesh = SubResource("s45")
+
+[node name="Marco" type="MeshInstance3D" parent="Zona3/Faro"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, -1.4)
+mesh = SubResource("s7")
+
+[node name="Nombre" type="Label3D" parent="Zona3/Faro"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 4.6, -1.45)
+pixel_size = 0.01
+modulate = Color(0.85, 0.8, 0.7, 0.6)
+font_size = 64
+outline_size = 0
+text = "Faro - salida y puntaje"
+
+[node name="Lampara1" type="Node3D" parent="Zona3/Faro"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0, 0)
+
+[node name="Luz" type="OmniLight3D" parent="Zona3/Faro/Lampara1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4, -0.8)
+light_color = Color(1, 0.85, 0.55, 1)
+light_energy = 3.0
+omni_range = 10.0
+script = ExtResource("parpadeo")
+energia_base = 3.0
+amplitud = 0.1
+
+[node name="Llama" type="MeshInstance3D" parent="Zona3/Faro/Lampara1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4, -1.2)
+mesh = SubResource("s19")
+
+[node name="ZonaLuz" type="Area3D" parent="Zona3/Faro/Lampara1"]
+script = ExtResource("zona")
+
+[node name="Forma" type="CollisionShape3D" parent="Zona3/Faro/Lampara1/ZonaLuz"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+shape = SubResource("s20")
+
+[node name="Paredes" type="Node3D" parent="."]
+
+[node name="Inicio" type="StaticBody3D" parent="Paredes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 6, 0)
+
+[node name="Malla" type="MeshInstance3D" parent="Paredes/Inicio"]
+mesh = SubResource("s46")
+
+[node name="Forma" type="CollisionShape3D" parent="Paredes/Inicio"]
+shape = SubResource("s47")
+
+[node name="BajadaZona2" type="StaticBody3D" parent="Paredes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 164.5, -1, 0)
+
+[node name="Malla" type="MeshInstance3D" parent="Paredes/BajadaZona2"]
+mesh = SubResource("s48")
+
+[node name="Forma" type="CollisionShape3D" parent="Paredes/BajadaZona2"]
+shape = SubResource("s49")
+
+[node name="BajadaZona3" type="StaticBody3D" parent="Paredes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -80.5, -12, 0)
+
+[node name="Malla" type="MeshInstance3D" parent="Paredes/BajadaZona3"]
+mesh = SubResource("s48")
+
+[node name="Forma" type="CollisionShape3D" parent="Paredes/BajadaZona3"]
+shape = SubResource("s49")
+
+[node name="FinFaro" type="StaticBody3D" parent="Paredes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -35.5, -18, 0)
+
+[node name="Malla" type="MeshInstance3D" parent="Paredes/FinFaro"]
+mesh = SubResource("s46")
+
+[node name="Forma" type="CollisionShape3D" parent="Paredes/FinFaro"]
+shape = SubResource("s47")
+
+[node name="Flecha1" type="Label3D" parent="Paredes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 162, 3, -1.45)
+pixel_size = 0.02
+text = "baja"
+
+[node name="Flecha2" type="Label3D" parent="Paredes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -78, -9, -1.45)
+pixel_size = 0.02
+text = "baja"

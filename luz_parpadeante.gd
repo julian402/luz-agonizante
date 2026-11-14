@@ -4,7 +4,7 @@ extends OmniLight3D
 @export var energia_base = 2.0
 @export var amplitud = 0.3      # sube o baja hasta un 30 %
 @export var velocidad = 4.0
-@export var semilla = 7
+@export var semilla = 0      # 0 = una al azar, para que no parpadeen todas iguales
 @export var apagar_en = 0.0     # segundos para apagarse (0 = nunca se apaga)
 @export var llama: Node3D
 
@@ -13,7 +13,7 @@ var tiempo = 0.0
 
 
 func _ready():
-	ruido.seed = semilla
+	ruido.seed = semilla if semilla != 0 else randi()
 	ruido.frequency = 1.0
 
 
