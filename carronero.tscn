@@ -1,0 +1,19 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://carronero.gd" id="1_carronero"]
+[ext_resource type="PackedScene" path="res://personaje/character-female-e.glb" id="2_modelo"]
+
+[sub_resource type="CapsuleShape3D" id="Capsula"]
+radius = 0.3
+height = 1.4
+
+[node name="Carronero" type="CharacterBody3D"]
+axis_lock_linear_z = true
+script = ExtResource("1_carronero")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
+shape = SubResource("Capsula")
+
+[node name="Modelo" parent="." instance=ExtResource("2_modelo")]
+transform = Transform3D(-2, 0, 0, 0, 2, 0, 0, 0, -2, 0, 0, 0)

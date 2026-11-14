@@ -11,6 +11,9 @@ enum Estado { QUIETO, ACERCARSE, AVISO, GOLPE, RECARGA }
 @export var alcance_golpe = 1.5
 @export var danio = 10
 @export var vida = 4.0
+# La luz que suelta al morir.
+@export var orbe_valor = 30
+const ORBE = preload("res://orbe.tscn")
 
 var estado = Estado.QUIETO
 var reloj = 0.0
@@ -84,7 +87,16 @@ func recibir_golpe(cuanto):
 	print(name, " vida ", vida)
 	if vida <= 0:
 		print(name, " vencido")
+		soltar_orbe()
 		queue_free()
+
+
+# Se agrega despues (deferred): morir pasa en medio del rayo del Chispazo.
+func soltar_orbe():
+	var orbe = ORBE.instantiate()
+	orbe.valor = orbe_valor
+	orbe.position = global_position + Vector3(0, 0.8, 0)
+	get_parent().add_child.call_deferred(orbe)
 
 
 func golpear():
@@ -115,7 +127,6 @@ func frenar(animacion):
 		anim.play(animacion)
 
 
+# En 3D: el nivel tiene pisos uno encima de otro y no se ve a traves del techo.
 func distancia():
-	var p = jugador.global_position
-	var o = global_position
-	return Vector2(p.x - o.x, p.z - o.z).length()
+	return global_position.distance_to(jugador.global_position)
