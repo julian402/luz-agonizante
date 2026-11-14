@@ -10,6 +10,8 @@
 [ext_resource type="Script" uid="uid://do4latv0hpyuq" path="res://salud.gd" id="8_salud"]
 [ext_resource type="PackedScene" path="res://hud.tscn" id="9_hud"]
 [ext_resource type="Script" uid="uid://bh4fvfsglu50x" path="res://partida.gd" id="10_partida"]
+[ext_resource type="PackedScene" path="res://antorcha.tscn" id="11_antorcha"]
+[ext_resource type="PackedScene" path="res://orbe.tscn" id="12_orbe"]
 
 [sub_resource type="ProceduralSkyMaterial" id="CieloMat"]
 
@@ -157,8 +159,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, -1.6)
 mesh = SubResource("ParedMalla")
 surface_material_override/0 = SubResource("ParedMat")
 
-[node name="Antorcha" type="OmniLight3D" parent="." unique_id=2134897077]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, -1)
-light_color = Color(1, 0.702, 0.278, 1)
-light_energy = 2.0
-omni_range = 7.0
+[node name="Antorcha" parent="." instance=ExtResource("11_antorcha")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 0, 0)
+
+[node name="Antorcha2" parent="." instance=ExtResource("11_antorcha")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0, 0)
+
+[node name="Orbe" parent="." instance=ExtResource("12_orbe")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13, 0.8, 0)
