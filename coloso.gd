@@ -17,6 +17,10 @@ enum Estado { QUIETO, ACERCARSE, AVISO, GOLPE, RECARGA, HUIR }
 # La luz que suelta al morir.
 @export var orbe_valor = 50
 const ORBE = preload("res://orbe.tscn")
+const BARRA = preload("res://barra_enemigo.tscn")
+# Es pesado: al recibir un golpe retrocede poco (m/s y segundos).
+@export var retroceso = 1.0
+@export var tiempo_retroceso = 0.1
 # true en el jefe: al morir le avisa a la Partida que se cumplio la meta.
 @export var es_meta = false
 
@@ -24,20 +28,33 @@ var estado = Estado.QUIETO
 var reloj = 0.0
 var jugador = null
 @onready var anim = $Modelo/AnimationPlayer
-var etiqueta = null   # la vida encima de la cabeza
-var destello = null   # luz roja al recibir un golpe
+var barra = null      # la vida encima de la cabeza
+var aviso = null      # el "!" antes del mazazo
+var destello = null   # luz roja: se enciende en el aviso
+var vida_max = 0.0
+var empujon = Vector3.ZERO
+var reloj_empujon = 0.0
 
 
 func _ready():
 	jugador = get_tree().get_first_node_in_group("jugador")
-	etiqueta = Label3D.new()
-	etiqueta.billboard = BaseMaterial3D.BILLBOARD_ENABLED
-	etiqueta.position = Vector3(0, 3.2, 0)
-	etiqueta.font_size = 96
-	etiqueta.pixel_size = 0.008
-	etiqueta.outline_size = 24
-	etiqueta.modulate = Color("#E8433A")
-	add_child(etiqueta)
+	vida_max = vida
+	barra = BARRA.instantiate()
+	barra.position = Vector3(0, 3.3, 0)
+	barra.ancho = 1.2
+	barra.scale = Vector3(1.2, 1.2, 1.2)
+	add_child(barra)
+	aviso = Label3D.new()
+	aviso.text = "!"
+	aviso.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+	aviso.no_depth_test = true
+	aviso.position = Vector3(0, 3.8, 0)
+	aviso.font_size = 160
+	aviso.pixel_size = 0.008
+	aviso.outline_size = 32
+	aviso.modulate = Color("#E8433A")
+	aviso.visible = false
+	add_child(aviso)
 	destello = OmniLight3D.new()
 	destello.light_color = Color("#E8433A")
 	destello.light_energy = 0.0
@@ -60,6 +77,8 @@ func _physics_process(delta):
 			ir_a(jugador.global_position)
 		Estado.AVISO:
 			frenar("interact-right")
+			# La luz roja crece durante el aviso: cuando esta al maximo, viene el golpe.
+			destello.light_energy = 4.0 * (1.0 - reloj / tiempo_aviso)
 		Estado.GOLPE:
 			frenar("attack-melee-right")
 			golpear()
@@ -69,6 +88,11 @@ func _physics_process(delta):
 			# Huir es perseguir con la flecha al revés.
 			var lejos = global_position - jugador.global_position
 			ir_a(global_position + lejos)
+	# El retroceso se suma despues: ir_a y frenar ya pusieron la velocidad.
+	if reloj_empujon > 0.0:
+		reloj_empujon -= delta
+		velocity.x += empujon.x
+		velocity.z += empujon.z
 	move_and_slide()
 
 
@@ -99,6 +123,9 @@ func decidir():
 
 func cambiar_a(nuevo):
 	estado = nuevo
+	aviso.visible = estado == Estado.AVISO
+	if estado != Estado.AVISO:
+		destello.light_energy = 0.0
 	print(name, " -> ", Estado.keys()[estado], " cuadro ",
 		Engine.get_physics_frames(), " a ",
 		snappedf(distancia(), 0.01), " m")
@@ -113,10 +140,15 @@ func recibir_golpe(cuanto):
 	vida -= cuanto
 	print(name, " vida ", vida)
 	mostrar_vida()
-	# Destello rojo de 0.15 s para que se vea el golpe.
-	destello.light_energy = 4.0
-	get_tree().create_timer(0.15).timeout.connect(apagar_destello)
+	# Que el golpe se sienta: blanco, numero, pausa corta y retroceso.
+	Efectos.destello($Modelo, 0.1)
+	Efectos.numero(get_parent(), global_position + Vector3(0, 2.8, 0), "-" + str(cuanto), Color.WHITE)
+	var lejos = global_position - jugador.global_position
+	lejos.y = 0.0
+	empujon = lejos.normalized() * retroceso
+	reloj_empujon = tiempo_retroceso
 	if vida <= 0:
+		Efectos.hitstop(get_tree(), 0.12)
 		print(name, " vencido")
 		soltar_orbe()
 		if es_meta:
@@ -124,6 +156,8 @@ func recibir_golpe(cuanto):
 			if partida != null:
 				partida.avisar_meta()
 		queue_free()
+		return
+	Efectos.hitstop(get_tree(), 0.05 if cuanto < 2 else 0.12)
 
 
 # El aviso le da tiempo al jugador: el golpe mira DÓNDE ESTÁ AHORA.
@@ -166,9 +200,4 @@ func distancia():
 
 
 func mostrar_vida():
-	etiqueta.text = str(maxi(int(vida), 0))
-
-
-func apagar_destello():
-	if is_instance_valid(destello):
-		destello.light_energy = 0.0
+	barra.poner(maxf(vida, 0.0), vida_max)
