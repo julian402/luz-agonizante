@@ -3,6 +3,8 @@ extends Node
 # Avisa cuando la vida cambia y cuando llega a 0. No sabe quien escucha.
 signal cambio(vida)
 signal sin_vida
+# Solo los golpes de enemigos, no la oscuridad: el HUD y Ceniza reaccionan distinto.
+signal golpeado(danio)
 
 @export var vida = 3.0
 @export var invulnerable = 1.0
@@ -43,6 +45,16 @@ func recibir_golpe(danio):
 		return
 	reloj = invulnerable
 	bajar(danio)
+	golpeado.emit(danio)
+
+
+# La usa la esquiva: mientras dure, los golpes no entran.
+func proteger(segundos):
+	reloj = maxf(reloj, segundos)
+
+
+func es_invulnerable():
+	return reloj > 0.001
 
 
 # Un orbe: sube, pero no pasa de la vida con la que empezo.

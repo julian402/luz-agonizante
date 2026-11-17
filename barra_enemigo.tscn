@@ -1,0 +1,35 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://barra_enemigo.gd" id="1_barra"]
+
+[sub_resource type="QuadMesh" id="FondoMalla"]
+size = Vector2(1.08, 0.18)
+
+[sub_resource type="StandardMaterial3D" id="FondoMat"]
+shading_mode = 0
+albedo_color = Color(0.05, 0.05, 0.07, 1)
+no_depth_test = true
+render_priority = 1
+
+[sub_resource type="QuadMesh" id="FrenteMalla"]
+size = Vector2(1, 0.12)
+
+[sub_resource type="StandardMaterial3D" id="FrenteMat"]
+shading_mode = 0
+albedo_color = Color(0.91, 0.263, 0.227, 1)
+no_depth_test = true
+render_priority = 2
+
+[node name="BarraEnemigo" type="Node3D"]
+script = ExtResource("1_barra")
+
+[node name="Fondo" type="MeshInstance3D" parent="."]
+cast_shadow = 0
+mesh = SubResource("FondoMalla")
+surface_material_override/0 = SubResource("FondoMat")
+
+[node name="Frente" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.01)
+cast_shadow = 0
+mesh = SubResource("FrenteMalla")
+surface_material_override/0 = SubResource("FrenteMat")
