@@ -1,0 +1,8 @@
+[gd_resource type="StandardMaterial3D" load_steps=2 format=3]
+
+[ext_resource type="Texture2D" path="res://Assets/FreeSample/Textures/Diffuse/BAKE_Blocks_DiffuseMap- 4K.png" id="1_tex"]
+
+[resource]
+resource_name = "M_DungeonCrawler_Blocks_001"
+albedo_texture = ExtResource("1_tex")
+roughness = 0.85
