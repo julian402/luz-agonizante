@@ -80,6 +80,7 @@ func avisar_hud(motivo, usado):
 		hud.mostrar_fin("PERDISTE", motivo + " · " + reloj_texto, Color("#E8433A"))
 
 func reiniciar():
+	Engine.time_scale = 1.0
 	intentos += 1
 	# Primero quitar la pausa: si no, la escena nueva nace congelada.
 	get_tree().paused = false
