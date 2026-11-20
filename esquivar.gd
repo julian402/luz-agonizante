@@ -37,7 +37,9 @@ func empezar():
 	pj.multiplicador = 0.0
 	pj.accion = "crouch"
 	print("empieza: ", tecla)
-	print("invulnerable")
+	var salud = pj.get_node_or_null("Salud")
+	if salud != null:
+		salud.proteger(duracion)
 
 
 func terminar():
