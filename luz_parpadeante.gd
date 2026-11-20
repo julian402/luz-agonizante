@@ -10,6 +10,8 @@ extends OmniLight3D
 
 var ruido = FastNoiseLite.new()
 var tiempo = 0.0
+var acumulado = 0.0
+const INTERVALO_LUZ = 0.05
 
 
 func _ready():
@@ -19,10 +21,15 @@ func _ready():
 
 func _process(delta):
 	tiempo += delta
+	acumulado += delta
+	if acumulado < INTERVALO_LUZ:
+		return
+	var paso = acumulado
+	acumulado = 0.0
 
 	# nivel 2: despues de un tiempo la antorcha se va apagando
 	if apagar_en > 0 and tiempo > apagar_en:
-		energia_base = lerp(energia_base, 0.0, 1 - exp(-1.5 * delta))
+		energia_base = lerp(energia_base, 0.0, 1 - exp(-1.5 * paso))
 
 	var valor = ruido.get_noise_1d(tiempo * velocidad)   # entre -1 y 1
 	light_energy = energia_base * (1 + amplitud * valor)
