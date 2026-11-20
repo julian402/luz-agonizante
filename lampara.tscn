@@ -1,0 +1,113 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://Assets/RuinsGLB/Accessories/Altar.glb" id="1_nqwnk"]
+[ext_resource type="Script" path="res://luz_parpadeante.gd" id="2_vr6hv"]
+[ext_resource type="Script" path="res://zona_luz.gd" id="3_eeev2"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8rn27"]
+albedo_color = Color(1, 0.95, 0.75, 1)
+emission_enabled = true
+emission = Color(1, 0.82, 0.42, 1)
+emission_energy_multiplier = 4.8
+
+[sub_resource type="SphereMesh" id="SphereMesh_o7wol"]
+radius = 0.38
+height = 0.76
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_hmcja"]
+transparency = 1
+blend_mode = 1
+shading_mode = 0
+albedo_color = Color(1, 0.8, 0.38, 0.25)
+
+[sub_resource type="SphereMesh" id="SphereMesh_vlmwt"]
+radius = 0.62
+height = 1.24
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ppgbv"]
+shading_mode = 0
+albedo_color = Color(1, 0.88, 0.48, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_kuodf"]
+material = SubResource("StandardMaterial3D_ppgbv")
+radius = 0.04
+height = 0.08
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_xikyd"]
+height = 6.0
+radius = 8.0
+
+[sub_resource type="Gradient" id="Gradient_sgiht"]
+offsets = PackedFloat32Array(0, 0.65, 1)
+colors = PackedColorArray(1, 0.84, 0.42, 0.45, 1, 0.72, 0.28, 0.2, 1, 0.6, 0.2, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_vfapp"]
+gradient = SubResource("Gradient_sgiht")
+width = 256
+height = 128
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(1, 0.5)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_nuhsr"]
+transparency = 1
+blend_mode = 1
+cull_mode = 2
+shading_mode = 0
+albedo_texture = SubResource("GradientTexture2D_vfapp")
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_ywy3o"]
+size = Vector2(15, 2.8)
+
+[node name="Lampara" type="Node3D" unique_id=1402572216]
+
+[node name="Altar" type="Node3D" parent="." unique_id=696315605 instance=ExtResource("1_nqwnk")]
+transform = Transform3D(1.45, 0, 0, 0, 1.45, 0, 0, 0, 1.45, 0, 0, -0.72)
+
+[node name="Llama" type="Node3D" parent="." unique_id=1097059890]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.85, -0.72)
+
+[node name="EsferaLuz" type="MeshInstance3D" parent="Llama" unique_id=697824204]
+material_override = SubResource("StandardMaterial3D_8rn27")
+cast_shadow = 0
+mesh = SubResource("SphereMesh_o7wol")
+
+[node name="Halo" type="MeshInstance3D" parent="Llama" unique_id=1287045102]
+material_override = SubResource("StandardMaterial3D_hmcja")
+cast_shadow = 0
+mesh = SubResource("SphereMesh_vlmwt")
+
+[node name="Chispas" type="CPUParticles3D" parent="Llama" unique_id=1773980980]
+amount = 22
+lifetime = 1.5
+mesh = SubResource("SphereMesh_kuodf")
+emission_shape = 1
+emission_sphere_radius = 0.45
+direction = Vector3(0, 1, 0)
+spread = 35.0
+gravity = Vector3(0, 0.3, 0)
+initial_velocity_min = 0.4
+initial_velocity_max = 1.0
+
+[node name="Luz" type="OmniLight3D" parent="." unique_id=524851188]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.2, -0.4)
+light_color = Color(1, 0.85, 0.5, 1)
+light_energy = 4.0
+omni_range = 12.0
+omni_attenuation = 1.1
+script = ExtResource("2_vr6hv")
+energia_base = 4.0
+amplitud = 0.12
+
+[node name="ZonaLuz" type="Area3D" parent="." unique_id=1903192876]
+script = ExtResource("3_eeev2")
+
+[node name="Forma" type="CollisionShape3D" parent="ZonaLuz" unique_id=24508064]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+shape = SubResource("CylinderShape3D_xikyd")
+
+[node name="PisoSantuario" type="MeshInstance3D" parent="." unique_id=1782198372]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.03, 0)
+material_override = SubResource("StandardMaterial3D_nuhsr")
+cast_shadow = 0
+mesh = SubResource("PlaneMesh_ywy3o")
