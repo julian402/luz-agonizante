@@ -29,6 +29,8 @@ var jugador = null
 var origen_x = 0.0
 var dir_patrulla = 1.0
 var dir_ataque = 1.0
+var rayo_suelo: PhysicsRayQueryParameters3D
+var rayo_pared: PhysicsRayQueryParameters3D
 @onready var anim = get_node_or_null("Modelo/AnimationPlayer")
 
 
@@ -37,6 +39,10 @@ func _ready():
 	origen_x = global_position.x
 	set_collision_mask_value(1, true)
 	set_collision_mask_value(2, true)
+	rayo_suelo = PhysicsRayQueryParameters3D.create(Vector3.ZERO, Vector3.ZERO, 3)
+	rayo_suelo.exclude = [get_rid()]
+	rayo_pared = PhysicsRayQueryParameters3D.create(Vector3.ZERO, Vector3.ZERO, 1)
+	rayo_pared.exclude = [get_rid()]
 	vida_max = vida
 	barra = BARRA.instantiate()
 	barra.position = Vector3(0, 2, 0)
@@ -174,7 +180,7 @@ func golpear():
 
 
 func patrullar():
-	if patrulla_rango <= 0.1 or not is_on_floor():
+	if patrulla_rango <= 0.1 or not is_on_floor() or distancia() > 26.0:
 		frenar("idle")
 		return
 	if global_position.x >= origen_x + patrulla_rango:
@@ -216,19 +222,15 @@ func mirar_a(destino):
 
 
 func _hay_suelo_adelante(dir_x: float) -> bool:
-	var origen = global_position + Vector3(dir_x * 0.65, 0.5, 0.0)
-	var fin = global_position + Vector3(dir_x * 0.65, -1.2, 0.0)
-	var consulta = PhysicsRayQueryParameters3D.create(origen, fin, 3)
-	consulta.exclude = [get_rid()]
-	return not get_world_3d().direct_space_state.intersect_ray(consulta).is_empty()
+	rayo_suelo.from = global_position + Vector3(dir_x * 0.65, 0.5, 0.0)
+	rayo_suelo.to = global_position + Vector3(dir_x * 0.65, -1.2, 0.0)
+	return not get_world_3d().direct_space_state.intersect_ray(rayo_suelo).is_empty()
 
 
 func _hay_pared_adelante(dir_x: float) -> bool:
-	var origen = global_position + Vector3(0.0, 0.8, 0.0)
-	var fin = global_position + Vector3(dir_x * 0.75, 0.8, 0.0)
-	var consulta = PhysicsRayQueryParameters3D.create(origen, fin, 1)
-	consulta.exclude = [get_rid()]
-	return not get_world_3d().direct_space_state.intersect_ray(consulta).is_empty()
+	rayo_pared.from = global_position + Vector3(0.0, 0.8, 0.0)
+	rayo_pared.to = global_position + Vector3(dir_x * 0.75, 0.8, 0.0)
+	return not get_world_3d().direct_space_state.intersect_ray(rayo_pared).is_empty()
 
 
 func frenar(animacion):
