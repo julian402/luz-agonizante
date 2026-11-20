@@ -20,8 +20,11 @@ var estado = Estado.QUIETO
 var altura = 0.0
 var saltos = 0   # vuelve a 0 al tocar el suelo
 var soltar_plataforma = 0.0
+var reloj_coyote = 0.0
+var reloj_buffer_salto = 0.0
 var forma_plataforma = CylinderShape3D.new()
 var consulta_plataforma = PhysicsShapeQueryParameters3D.new()
+var consulta_suelo: PhysicsRayQueryParameters3D
 
 
 func _ready():
@@ -34,28 +37,56 @@ func _ready():
 	consulta_plataforma.shape = forma_plataforma
 	consulta_plataforma.collision_mask = 2
 	consulta_plataforma.exclude = [get_rid()]
+	consulta_suelo = PhysicsRayQueryParameters3D.create(Vector3.ZERO, Vector3.ZERO, 2)
+	consulta_suelo.exclude = [get_rid()]
 
 
 func _physics_process(delta):
 	soltar_plataforma = maxf(soltar_plataforma - delta, 0.0)
+	reloj_buffer_salto = maxf(reloj_buffer_salto - delta, 0.0)
+
 	if is_on_floor():
 		saltos = 0
+		reloj_coyote = 0.12
 	else:
-		velocity.y -= gravedad * delta
+		reloj_coyote = maxf(reloj_coyote - delta, 0.0)
+		var g = gravedad * (1.25 if velocity.y < 0.0 else 1.0)
+		velocity.y -= g * delta
+
 	if Input.is_action_just_pressed("saltar"):
 		if Input.is_action_pressed("move_down") and is_on_floor() and _sobre_plataforma():
 			soltar_plataforma = 0.24
 			velocity.y = -2.0
+			reloj_coyote = 0.0
+			reloj_buffer_salto = 0.0
+		else:
+			reloj_buffer_salto = 0.12
+
+	if reloj_buffer_salto > 0.0:
+		if reloj_coyote > 0.0:
+			velocity.y = sqrt(2 * gravedad * ALTURA[Estado.CORRER])
+			saltos = 1
+			reloj_coyote = 0.0
+			reloj_buffer_salto = 0.0
+			print("salto 1 · altura ", ALTURA[Estado.CORRER], " m")
 		elif saltos < 2:
-			velocity.y = sqrt(2 * gravedad * ALTURA[estado])
-			saltos += 1
-			print("salto ", saltos, " · altura ", ALTURA[estado], " m")
+			velocity.y = sqrt(2 * gravedad * ALTURA[Estado.AIRE])
+			saltos = 2
+			reloj_buffer_salto = 0.0
+			print("salto 2 · altura ", ALTURA[Estado.AIRE], " m")
+
+	if Input.is_action_just_released("saltar") and velocity.y > 0.0:
+		velocity.y *= 0.58
 
 	var atravesando = soltar_plataforma > 0.0 or velocity.y > 0.05 or _cuerpo_en_plataforma()
 	set_collision_mask_value(2, not atravesando)
 
-	var input_dir = Input.get_vector("move_left", "move_right", "move_up", "move_down")
-	var entrada = Vector3(input_dir.x, 0.0, input_dir.y)
+	var entrada = Vector3.ZERO
+	if prueba == 0:
+		entrada.x = Input.get_axis("move_left", "move_right")
+	else:
+		var input_dir = Input.get_vector("move_left", "move_right", "move_up", "move_down")
+		entrada = Vector3(input_dir.x, 0.0, input_dir.y)
 	# solo el giro de la cámara en Y, para que la inclinación no afecte
 	var giro_cam = camara.global_rotation.y
 	var direction = entrada.rotated(Vector3.UP, giro_cam).normalized()
@@ -72,6 +103,8 @@ func _physics_process(delta):
 		basis = Basis.looking_at(direction)
 
 	move_and_slide()
+	if prueba == 0:
+		global_position.z = 0.0
 	var antes = estado
 	estado = elegir_estado()
 	altura = ALTURA[estado]
@@ -82,13 +115,9 @@ func _physics_process(delta):
 
 
 func _sobre_plataforma() -> bool:
-	var consulta = PhysicsRayQueryParameters3D.create(
-		global_position + Vector3(0, 0.2, 0),
-		global_position + Vector3(0, -0.25, 0),
-		2
-	)
-	consulta.exclude = [get_rid()]
-	return not get_world_3d().direct_space_state.intersect_ray(consulta).is_empty()
+	consulta_suelo.from = global_position + Vector3(0, 0.2, 0)
+	consulta_suelo.to = global_position + Vector3(0, -0.25, 0)
+	return not get_world_3d().direct_space_state.intersect_ray(consulta_suelo).is_empty()
 
 
 func _cuerpo_en_plataforma() -> bool:

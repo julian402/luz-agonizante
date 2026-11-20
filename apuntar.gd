@@ -12,20 +12,32 @@ extends Node
 # Empujoncito hacia adelante al atacar (m/s) y lo que dura la animación.
 @export var empujon = 2.0
 @export var tiempo_animacion = 0.2
+@export var ventana_combo = 0.55
 @onready var pj = get_parent()
 
 var origen = Vector3.ZERO   # de dónde sale el rayo
 var hasta = Vector3.ZERO    # dónde termina el rayo
 var espera = 0.0
-var combo = 0   # golpes seguidos; al soltar la tecla vuelve a 0
+var reloj_combo = 0.0
+var combo = 0   # golpes seguidos; vuelve a 0 al expirar la ventana de combo
+var bola_golpe = SphereShape3D.new()
+var consulta_golpe = PhysicsShapeQueryParameters3D.new()
+
+
+func _ready():
+	bola_golpe.radius = radio_golpe
+	consulta_golpe.shape = bola_golpe
+	consulta_golpe.exclude = [pj.get_rid()]
 
 
 func _physics_process(delta):
 	espera -= delta
-	if not Input.is_action_pressed(tecla):
+	reloj_combo = maxf(reloj_combo - delta, 0.0)
+	if reloj_combo <= 0.0:
 		combo = 0
 	if Input.is_action_pressed(tecla) and espera <= 0.001:
 		espera = cadencia
+		reloj_combo = ventana_combo
 		combo += 1
 		var este_danio = danio
 		var remate = combo == 3
@@ -46,13 +58,9 @@ func _physics_process(delta):
 func golpe_cercano(este_danio):
 	var adelante = -pj.global_basis.z
 	var centro = pj.global_position + Vector3(0, 0.9, 0) + adelante * distancia_golpe
-	var bola = SphereShape3D.new()
-	bola.radius = radio_golpe
-	var consulta = PhysicsShapeQueryParameters3D.new()
-	consulta.shape = bola
-	consulta.transform = Transform3D(Basis.IDENTITY, centro)
-	consulta.exclude = [pj.get_rid()]
-	var tocados = pj.get_world_3d().direct_space_state.intersect_shape(consulta, 8)
+	bola_golpe.radius = radio_golpe
+	consulta_golpe.transform = Transform3D(Basis.IDENTITY, centro)
+	var tocados = pj.get_world_3d().direct_space_state.intersect_shape(consulta_golpe, 8)
 	var golpeados = []
 	for t in tocados:
 		var c = t.collider
@@ -101,6 +109,9 @@ func lanzar_rayo():
 # Usa los enchufes del Personaje: animación y empujón (sin tocar personaje.gd).
 # Si la esquiva está activa (ya usa accion y empuje), no se pisa.
 func animar_ataque():
+	var esquiva = pj.get_node_or_null("Esquivar")
+	if esquiva != null and esquiva.estado == 1:
+		return
 	if pj.accion != "" or pj.empuje != Vector3.ZERO:
 		return
 	pj.accion = "attack-melee-right"
