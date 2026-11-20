@@ -11,7 +11,7 @@ func _ready():
 
 func _al_golpe(danio):
 	var esquiva = pj.get_node_or_null("Esquivar")
-	if esquiva == null or esquiva.estado != esquiva.Estado.ACTIVA:
+	if esquiva == null or esquiva.estado != 1:
 		pj.empuje = pj.basis.z * 6.0
 		_quitar_empuje()
 	var cam = get_viewport().get_camera_3d()
@@ -29,7 +29,7 @@ func _quitar_empuje():
 	if not is_instance_valid(pj):
 		return
 	var esquiva = pj.get_node_or_null("Esquivar")
-	if esquiva == null or esquiva.estado != esquiva.Estado.ACTIVA:
+	if esquiva == null or esquiva.estado != 1:
 		pj.empuje = Vector3.ZERO
 
 func _parpadear():
