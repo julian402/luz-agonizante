@@ -34,7 +34,7 @@ func _quitar_empuje():
 
 func _parpadear():
 	parpadeando = true
-	while salud.es_invulnerable() and is_instance_valid(modelo):
+	while is_instance_valid(salud) and is_instance_valid(modelo) and salud.es_invulnerable():
 		modelo.visible = not modelo.visible
 		await get_tree().create_timer(0.05).timeout
 	if is_instance_valid(modelo):
