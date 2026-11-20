@@ -19,22 +19,33 @@ var avance = Vector3.ZERO   # la parte de la velocidad que dan las teclas
 var estado = Estado.QUIETO
 var altura = 0.0
 var saltos = 0   # vuelve a 0 al tocar el suelo
+var soltar_plataforma = 0.0
 
 
 func _ready():
 	if camara == null:
 		camara = get_viewport().get_camera_3d()
+	set_collision_mask_value(1, true)
+	set_collision_mask_value(2, true)
 
 
 func _physics_process(delta):
+	soltar_plataforma = maxf(soltar_plataforma - delta, 0.0)
 	if is_on_floor():
 		saltos = 0
 	else:
 		velocity.y -= gravedad * delta
-	if Input.is_action_just_pressed("saltar") and saltos < 2:
-		velocity.y = sqrt(2 * gravedad * ALTURA[estado])
-		saltos += 1
-		print("salto ", saltos, " · altura ", ALTURA[estado], " m")
+	if Input.is_action_just_pressed("saltar"):
+		if Input.is_action_pressed("move_down") and is_on_floor() and _sobre_plataforma():
+			soltar_plataforma = 0.24
+			velocity.y = -2.0
+		elif saltos < 2:
+			velocity.y = sqrt(2 * gravedad * ALTURA[estado])
+			saltos += 1
+			print("salto ", saltos, " · altura ", ALTURA[estado], " m")
+
+	var atravesando = soltar_plataforma > 0.0 or velocity.y > 0.05 or _cuerpo_en_plataforma()
+	set_collision_mask_value(2, not atravesando)
 
 	var input_dir = Input.get_vector("move_left", "move_right", "move_up", "move_down")
 	var entrada = Vector3(input_dir.x, 0.0, input_dir.y)
@@ -61,6 +72,28 @@ func _physics_process(delta):
 		print("estado ", Estado.keys()[estado], " · salto de ", altura, " m")
 	animar()
 	_prueba()
+
+
+func _sobre_plataforma() -> bool:
+	var consulta = PhysicsRayQueryParameters3D.create(
+		global_position + Vector3(0, 0.2, 0),
+		global_position + Vector3(0, -0.25, 0),
+		2
+	)
+	consulta.exclude = [get_rid()]
+	return not get_world_3d().direct_space_state.intersect_ray(consulta).is_empty()
+
+
+func _cuerpo_en_plataforma() -> bool:
+	var forma = CylinderShape3D.new()
+	forma.radius = 0.30
+	forma.height = 1.50
+	var consulta = PhysicsShapeQueryParameters3D.new()
+	consulta.shape = forma
+	consulta.transform = Transform3D(Basis.IDENTITY, global_position + Vector3(0, 0.90, 0))
+	consulta.collision_mask = 2
+	consulta.exclude = [get_rid()]
+	return not get_world_3d().direct_space_state.intersect_shape(consulta, 1).is_empty()
 
 
 func elegir_estado():
