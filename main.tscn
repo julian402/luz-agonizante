@@ -48,14 +48,14 @@ light_energy = 0.34
 shadow_enabled = true
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=442437508 node_paths=PackedStringArray("objetivo")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.5, 3.0, 8.6)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.5, 3.0, 9.2)
 fov = 52.0
 script = ExtResource("6_camara")
 objetivo = NodePath("../Personaje")
-distancia = Vector3(0, 1.35, 8.6)
-altura_mira = 1.65
-limite_min = Vector2(-56, 0)
-limite_max = Vector2(204, 0)
+distancia = Vector3(0, 1.35, 9.2)
+altura_mira = 1.6
+limite_min = Vector2(7.5, 0)
+limite_max = Vector2(278.5, 0)
 
 [node name="Personaje" type="CharacterBody3D" parent="." unique_id=839677482 node_paths=PackedStringArray("camara") groups=["jugador"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, 0)
