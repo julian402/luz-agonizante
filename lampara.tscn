@@ -78,7 +78,7 @@ cast_shadow = 0
 mesh = SubResource("SphereMesh_vlmwt")
 
 [node name="Chispas" type="CPUParticles3D" parent="Llama" unique_id=1773980980]
-amount = 22
+amount = 10
 lifetime = 1.5
 mesh = SubResource("SphereMesh_kuodf")
 emission_shape = 1
