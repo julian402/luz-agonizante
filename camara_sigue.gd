@@ -12,6 +12,7 @@ extends Camera3D
 var temblor = 0.0
 var t_temblor = 0.0
 var mirada_actual = 0.0
+var posicion_suave = Vector3.ZERO
 
 
 func temblar(fuerza, duracion):
@@ -30,6 +31,7 @@ func _ready():
 	top_level = true
 	var foco = _foco_objetivo()
 	look_at_from_position(foco + distancia, foco)
+	posicion_suave = global_position
 
 
 func _physics_process(delta):
@@ -39,9 +41,10 @@ func _physics_process(delta):
 	mirada_actual = lerpf(mirada_actual, dir_x, 3.0 * delta)
 
 	var destino = _foco_objetivo() + distancia
-	global_position.x = lerpf(global_position.x, destino.x, minf(suavizado_x * delta, 1.0))
-	global_position.y = lerpf(global_position.y, destino.y, minf(suavizado_y * delta, 1.0))
-	global_position.z = lerpf(global_position.z, destino.z, minf(suavizado_x * delta, 1.0))
+	posicion_suave.x = lerpf(posicion_suave.x, destino.x, 1.0 - exp(-suavizado_x * delta))
+	posicion_suave.y = lerpf(posicion_suave.y, destino.y, 1.0 - exp(-suavizado_y * delta))
+	posicion_suave.z = lerpf(posicion_suave.z, destino.z, 1.0 - exp(-suavizado_x * delta))
+	global_position = posicion_suave
 
 	if t_temblor > 0.0:
 		t_temblor = maxf(t_temblor - delta, 0.0)
