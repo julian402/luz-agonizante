@@ -8,6 +8,8 @@ radius = 0.5
 height = 2.6
 
 [node name="Coloso" type="CharacterBody3D"]
+collision_mask = 3
+axis_lock_linear_z = true
 script = ExtResource("1_coloso")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]

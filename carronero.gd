@@ -11,6 +11,7 @@ enum Estado { QUIETO, ACERCARSE, AVISO, GOLPE, RECARGA }
 @export var alcance_golpe = 1.5
 @export var danio = 10
 @export var vida = 4.0
+@export var patrulla_rango = 4.0
 # La luz que suelta al morir.
 @export var orbe_valor = 30
 const ORBE = preload("res://orbe.tscn")
@@ -20,15 +21,22 @@ var aviso = null
 var vida_max = 0.0
 var empujon = Vector3.ZERO
 var reloj_empujon = 0.0
+var reloj_aturdido = 0.0
 
 var estado = Estado.QUIETO
 var reloj = 0.0
 var jugador = null
+var origen_x = 0.0
+var dir_patrulla = 1.0
+var dir_ataque = 1.0
 @onready var anim = get_node_or_null("Modelo/AnimationPlayer")
 
 
 func _ready():
 	jugador = get_tree().get_first_node_in_group("jugador")
+	origen_x = global_position.x
+	set_collision_mask_value(1, true)
+	set_collision_mask_value(2, true)
 	vida_max = vida
 	barra = BARRA.instantiate()
 	barra.position = Vector3(0, 2, 0)
@@ -48,41 +56,52 @@ func _ready():
 func _physics_process(delta):
 	velocity += get_gravity() * delta
 	if jugador == null:
+		velocity.z = 0.0
 		move_and_slide()
 		return
 	reloj = maxf(reloj - delta, 0.0)
-	var nuevo = decidir()
-	if nuevo != estado:
-		cambiar_a(nuevo)
-	match estado:
-		Estado.QUIETO:
-			frenar("idle")
-		Estado.ACERCARSE:
-			ir_a(jugador.global_position)
-		Estado.AVISO:
-			frenar("interact-right")
-		Estado.GOLPE:
-			frenar("attack-melee-right")
-			golpear()
-		Estado.RECARGA:
-			frenar("idle")
+	reloj_aturdido = maxf(reloj_aturdido - delta, 0.0)
+
+	if reloj_aturdido > 0.0:
+		frenar("idle")
+	else:
+		var nuevo = decidir()
+		if nuevo != estado:
+			cambiar_a(nuevo)
+		match estado:
+			Estado.QUIETO:
+				patrullar()
+			Estado.ACERCARSE:
+				ir_a(jugador.global_position)
+			Estado.AVISO:
+				mirar_a(jugador.global_position)
+				frenar("interact-right")
+			Estado.GOLPE:
+				frenar("attack-melee-right")
+				golpear()
+			Estado.RECARGA:
+				frenar("idle")
+
 	if reloj_empujon > 0.0:
 		reloj_empujon = maxf(reloj_empujon - delta, 0.0)
 		velocity.x += empujon.x
-		velocity.z += empujon.z
+
+	velocity.z = 0.0
 	move_and_slide()
+	global_position.z = 0.0
 
 
 func decidir():
 	var d = distancia()
+	var dy = absf(jugador.global_position.y - global_position.y)
 	match estado:
 		Estado.QUIETO:
-			if d <= rango_ver:
+			if d <= rango_ver and dy <= 2.4:
 				return Estado.ACERCARSE
 		Estado.ACERCARSE:
-			if d > rango_perder:
+			if d > rango_perder or dy > 4.2:
 				return Estado.QUIETO
-			if d <= rango_ataque:
+			if d <= rango_ataque and dy <= 1.8:
 				return Estado.AVISO
 		Estado.AVISO:
 			if reloj <= 0.001:
@@ -91,7 +110,7 @@ func decidir():
 			return Estado.RECARGA
 		Estado.RECARGA:
 			if reloj <= 0.001:
-				return Estado.ACERCARSE
+				return Estado.ACERCARSE if (d <= rango_perder and dy <= 3.5) else Estado.QUIETO
 	return estado
 
 
@@ -103,6 +122,9 @@ func cambiar_a(nuevo):
 		snappedf(distancia(), 0.01), " m")
 	if estado == Estado.AVISO:
 		reloj = tiempo_aviso
+		var dx = jugador.global_position.x - global_position.x
+		if absf(dx) > 0.05:
+			dir_ataque = signf(dx)
 	elif estado == Estado.RECARGA:
 		reloj = tiempo_recarga
 
@@ -113,10 +135,12 @@ func recibir_golpe(cuanto):
 	Efectos.destello($Modelo, 0.1)
 	Efectos.numero(get_parent(), global_position + Vector3(0, 2, 0), "-" + str(cuanto), Color.WHITE)
 	if jugador != null:
-		var lejos = global_position - jugador.global_position
-		lejos.y = 0.0
-		empujon = lejos.normalized() * 4.0
+		var dx = global_position.x - jugador.global_position.x
+		var dir = signf(dx) if absf(dx) > 0.05 else 1.0
+		empujon = Vector3(dir * 4.0, 0.0, 0.0)
 		reloj_empujon = 0.15
+	if estado != Estado.GOLPE:
+		reloj_aturdido = 0.12
 	print(name, " vida ", vida)
 	if vida <= 0:
 		print(name, " vencido")
@@ -136,7 +160,12 @@ func soltar_orbe():
 
 
 func golpear():
-	if distancia() > alcance_golpe:
+	if _hay_suelo_adelante(dir_ataque) and not _hay_pared_adelante(dir_ataque):
+		empujon = Vector3(dir_ataque * 6.5, 0.0, 0.0)
+		reloj_empujon = 0.12
+	var dx = absf(jugador.global_position.x - global_position.x)
+	var dy = absf(jugador.global_position.y - global_position.y)
+	if dx > alcance_golpe or dy > 1.6:
 		print(name, " falla a ", snappedf(distancia(), 0.01), " m")
 		return
 	var salud = jugador.get_node_or_null("Salud")
@@ -144,16 +173,62 @@ func golpear():
 		salud.recibir_golpe(danio)
 
 
-func ir_a(destino):
-	var hacia = destino - global_position
-	hacia.y = 0.0
-	if hacia.length() > 0.001:
-		var dir = hacia.normalized()
-		velocity.x = dir.x * rapidez
-		velocity.z = dir.z * rapidez
-		basis = Basis.looking_at(dir)
+func patrullar():
+	if patrulla_rango <= 0.1 or not is_on_floor():
+		frenar("idle")
+		return
+	if global_position.x >= origen_x + patrulla_rango:
+		dir_patrulla = -1.0
+	elif global_position.x <= origen_x - patrulla_rango:
+		dir_patrulla = 1.0
+	if not _hay_suelo_adelante(dir_patrulla) or _hay_pared_adelante(dir_patrulla):
+		dir_patrulla = -dir_patrulla
+		if not _hay_suelo_adelante(dir_patrulla) or _hay_pared_adelante(dir_patrulla):
+			frenar("idle")
+			return
+	velocity.x = dir_patrulla * rapidez * 0.45
+	basis = Basis.looking_at(Vector3(dir_patrulla, 0.0, 0.0))
 	if anim != null:
 		anim.play("walk")
+
+
+func ir_a(destino):
+	var dx = destino.x - global_position.x
+	if absf(dx) <= 0.15:
+		frenar("idle")
+		return
+	var dir_x = signf(dx)
+	basis = Basis.looking_at(Vector3(dir_x, 0.0, 0.0))
+	if is_on_floor() and (not _hay_suelo_adelante(dir_x) or _hay_pared_adelante(dir_x)):
+		velocity.x = 0.0
+		if anim != null:
+			anim.play("idle")
+		return
+	velocity.x = dir_x * rapidez
+	if anim != null:
+		anim.play("walk")
+
+
+func mirar_a(destino):
+	var dx = destino.x - global_position.x
+	if absf(dx) > 0.15:
+		basis = Basis.looking_at(Vector3(signf(dx), 0.0, 0.0))
+
+
+func _hay_suelo_adelante(dir_x: float) -> bool:
+	var origen = global_position + Vector3(dir_x * 0.65, 0.5, 0.0)
+	var fin = global_position + Vector3(dir_x * 0.65, -1.2, 0.0)
+	var consulta = PhysicsRayQueryParameters3D.create(origen, fin, 3)
+	consulta.exclude = [get_rid()]
+	return not get_world_3d().direct_space_state.intersect_ray(consulta).is_empty()
+
+
+func _hay_pared_adelante(dir_x: float) -> bool:
+	var origen = global_position + Vector3(0.0, 0.8, 0.0)
+	var fin = global_position + Vector3(dir_x * 0.75, 0.8, 0.0)
+	var consulta = PhysicsRayQueryParameters3D.create(origen, fin, 1)
+	consulta.exclude = [get_rid()]
+	return not get_world_3d().direct_space_state.intersect_ray(consulta).is_empty()
 
 
 func frenar(animacion):
@@ -163,6 +238,5 @@ func frenar(animacion):
 		anim.play(animacion)
 
 
-# En 3D: el nivel tiene pisos uno encima de otro y no se ve a traves del techo.
 func distancia():
 	return global_position.distance_to(jugador.global_position)

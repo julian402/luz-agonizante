@@ -14,6 +14,7 @@ enum Estado { QUIETO, ACERCARSE, AVISO, GOLPE, RECARGA, HUIR }
 @export var vida = 100.0
 @export var vida_huida = 30.0
 @export var danio_prueba = 25.0
+@export var patrulla_rango = 3.0
 # La luz que suelta al morir.
 @export var orbe_valor = 50
 const ORBE = preload("res://orbe.tscn")
@@ -34,10 +35,16 @@ var destello = null   # luz roja: se enciende en el aviso
 var vida_max = 0.0
 var empujon = Vector3.ZERO
 var reloj_empujon = 0.0
+var origen_x = 0.0
+var dir_patrulla = -1.0
+var enfurecido = false
 
 
 func _ready():
 	jugador = get_tree().get_first_node_in_group("jugador")
+	origen_x = global_position.x
+	set_collision_mask_value(1, true)
+	set_collision_mask_value(2, true)
 	vida_max = vida
 	barra = BARRA.instantiate()
 	barra.position = Vector3(0, 3.3, 0)
@@ -58,7 +65,7 @@ func _ready():
 	destello = OmniLight3D.new()
 	destello.light_color = Color("#E8433A")
 	destello.light_energy = 0.0
-	destello.omni_range = 3.0
+	destello.omni_range = 3.5
 	destello.position = Vector3(0, 1.5, 0)
 	add_child(destello)
 	mostrar_vida()
@@ -66,19 +73,28 @@ func _ready():
 
 func _physics_process(delta):
 	velocity += get_gravity() * delta
+	if jugador == null:
+		velocity.z = 0.0
+		move_and_slide()
+		return
 	reloj = maxf(reloj - delta, 0.0)
 	var nuevo = decidir()
 	if nuevo != estado:
 		cambiar_a(nuevo)
 	match estado:
 		Estado.QUIETO:
-			frenar("idle")
+			if es_meta:
+				mirar_a(jugador.global_position)
+				frenar("idle")
+			else:
+				patrullar()
 		Estado.ACERCARSE:
 			ir_a(jugador.global_position)
 		Estado.AVISO:
+			mirar_a(jugador.global_position)
 			frenar("interact-right")
 			# La luz roja crece durante el aviso: cuando esta al maximo, viene el golpe.
-			destello.light_energy = 4.0 * (1.0 - reloj / tiempo_aviso)
+			destello.light_energy = 4.0 * (1.0 - reloj / maxf(tiempo_aviso, 0.01))
 		Estado.GOLPE:
 			frenar("attack-melee-right")
 			golpear()
@@ -92,8 +108,9 @@ func _physics_process(delta):
 	if reloj_empujon > 0.0:
 		reloj_empujon -= delta
 		velocity.x += empujon.x
-		velocity.z += empujon.z
+	velocity.z = 0.0
 	move_and_slide()
+	global_position.z = 0.0
 
 
 # Desde cada estado solo se puede pasar a uno: el ciclo del ataque.
@@ -101,14 +118,16 @@ func decidir():
 	# Va primero: le gana a cualquier estado, también al AVISO.
 	if vida <= vida_huida:
 		return Estado.HUIR
+	var d = distancia()
+	var dy = absf(jugador.global_position.y - global_position.y)
 	match estado:
 		Estado.QUIETO:
-			if distancia() <= rango_ver:
+			if d <= rango_ver and dy <= 3.0:
 				return Estado.ACERCARSE
 		Estado.ACERCARSE:
-			if distancia() > rango_perder:
+			if d > rango_perder or dy > 4.8:
 				return Estado.QUIETO
-			if distancia() <= rango_ataque:
+			if d <= rango_ataque and dy <= 2.2:
 				return Estado.AVISO
 		Estado.AVISO:
 			if reloj <= 0.001:
@@ -117,7 +136,7 @@ func decidir():
 			return Estado.RECARGA
 		Estado.RECARGA:
 			if reloj <= 0.001:
-				return Estado.ACERCARSE
+				return Estado.ACERCARSE if (d <= rango_perder and dy <= 4.0) else Estado.QUIETO
 	return estado
 
 
@@ -125,7 +144,7 @@ func cambiar_a(nuevo):
 	estado = nuevo
 	aviso.visible = estado == Estado.AVISO
 	if estado != Estado.AVISO:
-		destello.light_energy = 0.0
+		destello.light_energy = 1.6 if enfurecido else 0.0
 	print(name, " -> ", Estado.keys()[estado], " cuadro ",
 		Engine.get_physics_frames(), " a ",
 		snappedf(distancia(), 0.01), " m")
@@ -140,13 +159,20 @@ func recibir_golpe(cuanto):
 	vida -= cuanto
 	print(name, " vida ", vida)
 	mostrar_vida()
+	if es_meta and not enfurecido and vida > 0.0 and vida <= vida_max * 0.5:
+		enfurecido = true
+		rapidez *= 1.25
+		tiempo_recarga = minf(tiempo_recarga, 1.4)
+		destello.light_energy = 1.6
+		Efectos.numero(get_parent(), global_position + Vector3(0, 3.6, 0), "¡FURIA!", Color("#E8433A"))
 	# Que el golpe se sienta: blanco, numero, pausa corta y retroceso.
 	Efectos.destello($Modelo, 0.1)
 	Efectos.numero(get_parent(), global_position + Vector3(0, 2.8, 0), "-" + str(cuanto), Color.WHITE)
-	var lejos = global_position - jugador.global_position
-	lejos.y = 0.0
-	empujon = lejos.normalized() * retroceso
-	reloj_empujon = tiempo_retroceso
+	if jugador != null:
+		var dx = global_position.x - jugador.global_position.x
+		var dir = signf(dx) if absf(dx) > 0.05 else 1.0
+		empujon = Vector3(dir * retroceso, 0.0, 0.0)
+		reloj_empujon = tiempo_retroceso
 	if vida <= 0:
 		Efectos.hitstop(get_tree(), 0.12)
 		print(name, " vencido")
@@ -162,7 +188,10 @@ func recibir_golpe(cuanto):
 
 # El aviso le da tiempo al jugador: el golpe mira DÓNDE ESTÁ AHORA.
 func golpear():
-	if distancia() > alcance_golpe:
+	Efectos.temblar(self, 0.18, 0.22)
+	var dx = absf(jugador.global_position.x - global_position.x)
+	var dy = absf(jugador.global_position.y - global_position.y)
+	if dx > alcance_golpe or dy > 2.2:
 		print(name, " falla a ", snappedf(distancia(), 0.01), " m")
 		return
 	var salud = jugador.get_node_or_null("Salud")
@@ -178,14 +207,59 @@ func soltar_orbe():
 	get_parent().add_child.call_deferred(orbe)
 
 
-func ir_a(destino):
-	var hacia = destino - global_position
-	hacia.y = 0.0
-	var dir = hacia.normalized()
-	velocity.x = dir.x * rapidez
-	velocity.z = dir.z * rapidez
-	basis = Basis.looking_at(dir)
+func patrullar():
+	if patrulla_rango <= 0.1 or not is_on_floor():
+		frenar("idle")
+		return
+	if global_position.x >= origen_x + patrulla_rango:
+		dir_patrulla = -1.0
+	elif global_position.x <= origen_x - patrulla_rango:
+		dir_patrulla = 1.0
+	if not _hay_suelo_adelante(dir_patrulla) or _hay_pared_adelante(dir_patrulla):
+		dir_patrulla = -dir_patrulla
+		if not _hay_suelo_adelante(dir_patrulla) or _hay_pared_adelante(dir_patrulla):
+			frenar("idle")
+			return
+	velocity.x = dir_patrulla * rapidez * 0.4
+	basis = Basis.looking_at(Vector3(dir_patrulla, 0.0, 0.0))
 	anim.play("walk")
+
+
+func ir_a(destino):
+	var dx = destino.x - global_position.x
+	if absf(dx) <= 0.15:
+		frenar("idle")
+		return
+	var dir_x = signf(dx)
+	basis = Basis.looking_at(Vector3(dir_x, 0.0, 0.0))
+	if is_on_floor() and (not _hay_suelo_adelante(dir_x) or _hay_pared_adelante(dir_x)):
+		velocity.x = 0.0
+		anim.play("idle")
+		return
+	velocity.x = dir_x * rapidez
+	anim.play("walk")
+
+
+func mirar_a(destino):
+	var dx = destino.x - global_position.x
+	if absf(dx) > 0.15:
+		basis = Basis.looking_at(Vector3(signf(dx), 0.0, 0.0))
+
+
+func _hay_suelo_adelante(dir_x: float) -> bool:
+	var origen = global_position + Vector3(dir_x * 0.85, 0.5, 0.0)
+	var fin = global_position + Vector3(dir_x * 0.85, -1.2, 0.0)
+	var consulta = PhysicsRayQueryParameters3D.create(origen, fin, 3)
+	consulta.exclude = [get_rid()]
+	return not get_world_3d().direct_space_state.intersect_ray(consulta).is_empty()
+
+
+func _hay_pared_adelante(dir_x: float) -> bool:
+	var origen = global_position + Vector3(0.0, 1.0, 0.0)
+	var fin = global_position + Vector3(dir_x * 0.95, 1.0, 0.0)
+	var consulta = PhysicsRayQueryParameters3D.create(origen, fin, 1)
+	consulta.exclude = [get_rid()]
+	return not get_world_3d().direct_space_state.intersect_ray(consulta).is_empty()
 
 
 func frenar(animacion):
@@ -194,7 +268,6 @@ func frenar(animacion):
 	anim.play(animacion)
 
 
-# En 3D: el nivel tiene pisos uno encima de otro y no se ve a traves del techo.
 func distancia():
 	return global_position.distance_to(jugador.global_position)
 
