@@ -9,6 +9,7 @@
 [ext_resource type="PackedScene" path="res://hud.tscn" id="9_hud"]
 [ext_resource type="Script" uid="uid://bh4fvfsglu50x" path="res://partida.gd" id="10_partida"]
 [ext_resource type="PackedScene" path="res://nivel.tscn" id="11_nivel"]
+[ext_resource type="Script" path="res://golpeado.gd" id="12_golpeado"]
 [sub_resource type="ProceduralSkyMaterial" id="CieloMat"]
 
 [sub_resource type="Sky" id="Cielo"]
@@ -68,6 +69,9 @@ script = ExtResource("8_salud")
 vida = 100
 invulnerable = 0.3
 reapariciones = 0
+
+[node name="Golpeado" type="Node" parent="Personaje"]
+script = ExtResource("12_golpeado")
 
 [node name="HUD" parent="." unique_id=2071462178 instance=ExtResource("9_hud")]
 
