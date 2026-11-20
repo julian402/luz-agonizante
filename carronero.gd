@@ -14,6 +14,12 @@ enum Estado { QUIETO, ACERCARSE, AVISO, GOLPE, RECARGA }
 # La luz que suelta al morir.
 @export var orbe_valor = 30
 const ORBE = preload("res://orbe.tscn")
+const BARRA = preload("res://barra_enemigo.tscn")
+var barra = null
+var aviso = null
+var vida_max = 0.0
+var empujon = Vector3.ZERO
+var reloj_empujon = 0.0
 
 var estado = Estado.QUIETO
 var reloj = 0.0
@@ -23,6 +29,20 @@ var jugador = null
 
 func _ready():
 	jugador = get_tree().get_first_node_in_group("jugador")
+	vida_max = vida
+	barra = BARRA.instantiate()
+	barra.position = Vector3(0, 2, 0)
+	add_child(barra)
+	aviso = Label3D.new()
+	aviso.text = "!"
+	aviso.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+	aviso.no_depth_test = true
+	aviso.position = Vector3(0, 2.5, 0)
+	aviso.font_size = 130
+	aviso.pixel_size = 0.008
+	aviso.modulate = Color("#E8433A")
+	aviso.visible = false
+	add_child(aviso)
 
 
 func _physics_process(delta):
@@ -46,6 +66,10 @@ func _physics_process(delta):
 			golpear()
 		Estado.RECARGA:
 			frenar("idle")
+	if reloj_empujon > 0.0:
+		reloj_empujon = maxf(reloj_empujon - delta, 0.0)
+		velocity.x += empujon.x
+		velocity.z += empujon.z
 	move_and_slide()
 
 
@@ -73,6 +97,7 @@ func decidir():
 
 func cambiar_a(nuevo):
 	estado = nuevo
+	aviso.visible = estado == Estado.AVISO
 	print(name, " -> ", Estado.keys()[estado], " cuadro ",
 		Engine.get_physics_frames(), " a ",
 		snappedf(distancia(), 0.01), " m")
@@ -84,11 +109,22 @@ func cambiar_a(nuevo):
 
 func recibir_golpe(cuanto):
 	vida -= cuanto
+	barra.poner(maxf(vida, 0.0), vida_max)
+	Efectos.destello($Modelo, 0.1)
+	Efectos.numero(get_parent(), global_position + Vector3(0, 2, 0), "-" + str(cuanto), Color.WHITE)
+	if jugador != null:
+		var lejos = global_position - jugador.global_position
+		lejos.y = 0.0
+		empujon = lejos.normalized() * 4.0
+		reloj_empujon = 0.15
 	print(name, " vida ", vida)
 	if vida <= 0:
 		print(name, " vencido")
+		Efectos.hitstop(get_tree(), 0.12)
 		soltar_orbe()
 		queue_free()
+		return
+	Efectos.hitstop(get_tree(), 0.05 if cuanto < 2 else 0.12)
 
 
 # Se agrega despues (deferred): morir pasa en medio del rayo del Chispazo.
