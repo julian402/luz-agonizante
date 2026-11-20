@@ -5,9 +5,9 @@ extends Camera3D
 @export var altura_mira = 1.6
 @export var adelanto_x = 1.25
 @export var suavizado_x = 5.5
-@export var suavizado_y = 4.2
-@export var limite_min = Vector2(7.5, 0)
-@export var limite_max = Vector2(278.5, 0)
+@export var suavizado_y = 4.5
+@export var limite_min = Vector2(8.0, -26.2)   # x y y minimas
+@export var limite_max = Vector2(196.0, 26.5)   # x y y maximas
 
 var temblor = 0.0
 var t_temblor = 0.0
@@ -22,9 +22,8 @@ func temblar(fuerza, duracion):
 func _foco_objetivo() -> Vector3:
 	var pos = objetivo.global_position
 	var fx = clampf(pos.x + mirada_actual, limite_min.x, limite_max.x)
-	var fy = pos.y + altura_mira
-	var fz = clampf(pos.z, limite_min.y, limite_max.y)
-	return Vector3(fx, fy, fz)
+	var fy = clampf(pos.y + altura_mira, limite_min.y, limite_max.y)
+	return Vector3(fx, fy, pos.z)
 
 
 func _ready():
