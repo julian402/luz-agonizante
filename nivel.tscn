@@ -216,6 +216,14 @@ font_size = 64
 outline_size = 0
 text = "Entrada"
 
+[node name="Controles" type="Label3D" parent="Zona1/Entrada"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 3.0, -1.4)
+pixel_size = 0.006
+font_size = 48
+outline_size = 12
+modulate = Color(1, 0.88, 0.6, 1)
+text = "A / D: MOVERSE    ESPACIO: SALTAR\nJ: ATACAR    SHIFT: ESQUIVAR\nQUEDATE EN LA LUZ: LA OSCURIDAD TE QUITA VIDA"
+
 [node name="Antorcha1" parent="Zona1/Entrada" instance=ExtResource("antorcha")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, 0)
 
