@@ -7,7 +7,7 @@ const ALTURA = [1.5, 1.5, 1.0]   # metros, en el orden del enum
 @export var camara: Camera3D
 @export var speed_caminar = 6.0
 @export var speed_correr = 6.0
-@export var tiempo_arranque = 0.2
+@export var tiempo_arranque = 0.12
 @export var gravedad = 25.0
 @onready var anim = $Modelo/AnimationPlayer
 
@@ -20,6 +20,8 @@ var estado = Estado.QUIETO
 var altura = 0.0
 var saltos = 0   # vuelve a 0 al tocar el suelo
 var soltar_plataforma = 0.0
+var forma_plataforma = CylinderShape3D.new()
+var consulta_plataforma = PhysicsShapeQueryParameters3D.new()
 
 
 func _ready():
@@ -27,6 +29,11 @@ func _ready():
 		camara = get_viewport().get_camera_3d()
 	set_collision_mask_value(1, true)
 	set_collision_mask_value(2, true)
+	forma_plataforma.radius = 0.30
+	forma_plataforma.height = 1.50
+	consulta_plataforma.shape = forma_plataforma
+	consulta_plataforma.collision_mask = 2
+	consulta_plataforma.exclude = [get_rid()]
 
 
 func _physics_process(delta):
@@ -85,15 +92,8 @@ func _sobre_plataforma() -> bool:
 
 
 func _cuerpo_en_plataforma() -> bool:
-	var forma = CylinderShape3D.new()
-	forma.radius = 0.30
-	forma.height = 1.50
-	var consulta = PhysicsShapeQueryParameters3D.new()
-	consulta.shape = forma
-	consulta.transform = Transform3D(Basis.IDENTITY, global_position + Vector3(0, 0.90, 0))
-	consulta.collision_mask = 2
-	consulta.exclude = [get_rid()]
-	return not get_world_3d().direct_space_state.intersect_shape(consulta, 1).is_empty()
+	consulta_plataforma.transform = Transform3D(Basis.IDENTITY, global_position + Vector3(0, 0.90, 0))
+	return not get_world_3d().direct_space_state.intersect_shape(consulta_plataforma, 1).is_empty()
 
 
 func elegir_estado():
