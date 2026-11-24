@@ -111,7 +111,7 @@ albedo_color = Color(1, 0.8, 0.35, 0.42)
 [sub_resource type="BoxMesh" id="BoxMesh_fjlne"]
 size = Vector3(0.08, 0.03, 2.4)
 
-[node name="Antorcha" type="Node3D" unique_id=1374565507]
+[node name="Antorcha" type="Node3D" unique_id=1374565507 groups=["antorchas"]]
 
 [node name="Soporte" type="Node3D" parent="." unique_id=1264619849]
 transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 0, 2.35, -1.24)
@@ -161,7 +161,7 @@ omni_attenuation = 1.25
 script = ExtResource("2_wxyjw")
 energia_base = 2.6
 
-[node name="ZonaLuz" type="Area3D" parent="." unique_id=600488625]
+[node name="ZonaLuz" type="Area3D" parent="." unique_id=600488625 groups=["luz"]]
 script = ExtResource("3_dhdgn")
 
 [node name="Forma" type="CollisionShape3D" parent="ZonaLuz" unique_id=1297165833]

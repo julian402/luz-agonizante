@@ -28,6 +28,8 @@ func _ready():
 	bola_golpe.radius = radio_golpe
 	consulta_golpe.shape = bola_golpe
 	consulta_golpe.exclude = [pj.get_rid()]
+	# Tambien areas: las bolas de veneno (grupo "rompibles") se rompen con la espada.
+	consulta_golpe.collide_with_areas = true
 
 
 func _physics_process(delta):
@@ -60,7 +62,7 @@ func golpe_cercano(este_danio):
 	var centro = pj.global_position + Vector3(0, 0.9, 0) + adelante * distancia_golpe
 	bola_golpe.radius = radio_golpe
 	consulta_golpe.transform = Transform3D(Basis.IDENTITY, centro)
-	var tocados = pj.get_world_3d().direct_space_state.intersect_shape(consulta_golpe, 8)
+	var tocados = pj.get_world_3d().direct_space_state.intersect_shape(consulta_golpe, 16)
 	var golpeados = []
 	for t in tocados:
 		var c = t.collider
