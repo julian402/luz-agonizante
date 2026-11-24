@@ -11,6 +11,24 @@ const ALTURA = [1.5, 1.5, 1.0]   # metros, en el orden del enum
 @export var gravedad = 25.0
 @onready var anim = $Modelo/AnimationPlayer
 
+# Nombres viejos (los que usan los scripts) -> animacion del modelo KayKit y su rapidez.
+# Asi apuntar.gd y esquivar.gd siguen pidiendo "crouch", "attack-melee-right", etc.
+const ANIM = {
+	"idle": ["Idle", 1.0],
+	"sprint": ["Running_A", 1.1],
+	"jump": ["Jump_Start", 1.4],
+	"fall": ["Jump_Idle", 1.0],
+	"attack-melee-right": ["1H_Melee_Attack_Chop", 4.0],
+	"attack-melee-left": ["1H_Melee_Attack_Slice_Diagonal", 4.0],
+	"attack-remate": ["1H_Melee_Attack_Slice_Horizontal", 3.5],
+	"crouch": ["Dodge_Forward", 1.6],
+	"hit": ["Hit_A", 2.0],
+	"die": ["Death_A", 1.0],
+}
+const EN_BUCLE = ["Idle", "Running_A", "Jump_Idle"]
+# Armas del pack que Ceniza no usa (se queda con las dagas).
+const OCULTAR = ["1H_Crossbow", "2H_Crossbow", "Throwable"]
+
 # Enchufes: otros scripts (las acciones del juego) cambian estas tres variables.
 var multiplicador = 1.0     # 1 = rapidez normal, 0.5 = la mitad, 0 = quieto
 var empuje = Vector3.ZERO   # velocidad extra en m/s (dash, retroceso)
@@ -42,6 +60,13 @@ func _ready():
 	consulta_plataforma.exclude = [get_rid()]
 	consulta_suelo = PhysicsRayQueryParameters3D.create(Vector3.ZERO, Vector3.ZERO, 2)
 	consulta_suelo.exclude = [get_rid()]
+	for n in EN_BUCLE:
+		if anim.has_animation(n):
+			anim.get_animation(n).loop_mode = Animation.LOOP_LINEAR
+	for n in OCULTAR:
+		var arma = $Modelo.find_child(n, true, false)
+		if arma != null:
+			arma.visible = false
 
 
 func _physics_process(delta):
@@ -184,17 +209,32 @@ func elegir_estado():
 	return Estado.CORRER   # Ceniza no camina: siempre corre
 
 
+func animacion(n):
+	return ANIM.get(n, [n, 1.0])[0]
+
+
+# Pone la animacion traducida; si ya es la puesta no la reinicia
+# (las de una vez, como saltar o morir, se quedan en su ultimo cuadro).
+func tocar(n):
+	var datos = ANIM.get(n, [n, 1.0])
+	if not anim.has_animation(datos[0]):
+		return
+	if anim.assigned_animation == datos[0]:
+		return
+	anim.play(datos[0], 0.08, datos[1])
+
+
 func animar():
 	if accion != "":
-		anim.play(accion)
+		tocar(accion)
 		return
 	match estado:
 		Estado.QUIETO:
-			anim.play("idle")
+			tocar("idle")
 		Estado.CORRER:
-			anim.play("sprint")
+			tocar("sprint")
 		Estado.AIRE:
-			anim.play("jump" if velocity.y > 0 else "fall")
+			tocar("jump" if velocity.y > 0 else "fall")
 
 
 # ---------------------------------------------------------------------------

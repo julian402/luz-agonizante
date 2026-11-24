@@ -86,6 +86,11 @@ func _al_quedar_sin_vida():
 		cambio.emit(vida)
 		print("reaparece cuadro ", Engine.get_physics_frames())
 		return
+	# Muere: animacion Death_A, queda quieta y 1 s despues sale la derrota.
+	pj.accion = "die"
+	pj.multiplicador = 0.0
+	pj.empuje = Vector3.ZERO
+	await get_tree().create_timer(1.0).timeout
 	var partida = get_tree().get_first_node_in_group("partida")
 	if partida != null:
 		partida.perder("sin vida")

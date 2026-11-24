@@ -46,7 +46,7 @@ func _physics_process(delta):
 		if remate:   # el remate del combo
 			este_danio = danio_remate
 			combo = 0
-		animar_ataque()
+		animar_ataque(remate, combo)
 		mostrar_arco(remate)
 		if remate:
 			Efectos.temblar(pj, 0.08, 0.15)
@@ -110,13 +110,14 @@ func lanzar_rayo():
 
 # Usa los enchufes del Personaje: animación y empujón (sin tocar personaje.gd).
 # Si la esquiva está activa (ya usa accion y empuje), no se pisa.
-func animar_ataque():
+func animar_ataque(remate = false, golpe = 1):
 	var esquiva = pj.get_node_or_null("Esquivar")
 	if esquiva != null and esquiva.estado == 1:
 		return
 	if pj.accion != "" or pj.empuje != Vector3.ZERO:
 		return
-	pj.accion = "attack-melee-right"
+	var nombre = "attack-remate" if remate else ("attack-melee-left" if golpe == 2 else "attack-melee-right")
+	pj.accion = nombre
 	var empuje = -pj.global_basis.z * empujon
 	empuje.y = 0.0
 	pj.empuje = empuje
@@ -124,7 +125,7 @@ func animar_ataque():
 		if pj.empuje == empuje:
 			pj.empuje = Vector3.ZERO)
 	get_tree().create_timer(tiempo_animacion).timeout.connect(func():
-		if pj.accion == "attack-melee-right":
+		if pj.accion == nombre:
 			pj.accion = "")
 
 

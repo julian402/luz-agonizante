@@ -21,6 +21,11 @@ func _al_golpe(danio):
 		else:
 			cam.temblar(0.15, 0.2)
 	Efectos.numero(pj.get_parent(), pj.global_position + Vector3(0, 2, 0), "-" + str(danio), Color.RED)
+	if pj.accion == "":
+		pj.accion = "hit"
+		get_tree().create_timer(0.3).timeout.connect(func():
+			if is_instance_valid(pj) and pj.accion == "hit":
+				pj.accion = "")
 	if not parpadeando:
 		_parpadear()
 
