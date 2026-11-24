@@ -1,0 +1,20 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://escupidor.gd" id="1_escupidor"]
+[ext_resource type="PackedScene" path="res://Assets/RuinsGLB/Skely/SkelyPoison.glb" id="2_modelo"]
+
+[sub_resource type="CapsuleShape3D" id="Capsula"]
+radius = 0.3
+height = 1.5
+
+[node name="Escupidor" type="CharacterBody3D" groups=["enemigos"]]
+collision_mask = 3
+axis_lock_linear_z = true
+script = ExtResource("1_escupidor")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 0)
+shape = SubResource("Capsula")
+
+[node name="Modelo" parent="." instance=ExtResource("2_modelo")]
+transform = Transform3D(-0.08, 0, 0, 0, 0.08, 0, 0, 0, -0.08, 0, 0, 0)
