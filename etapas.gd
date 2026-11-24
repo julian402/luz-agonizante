@@ -44,7 +44,7 @@ const ETAPAS = [
 ]
 
 @export var intro = true          # cinematica al empezar
-@export var vida_extra = 20.0     # vida maxima que gana Ceniza al pasar de etapa
+@export var espera_saltar = 2.0   # segundos antes de poder saltar la cinematica
 
 var actual = 0
 var sellos = []                   # por etapa: lista de sellos
@@ -58,6 +58,7 @@ var jugador = null
 var camara = null
 var entorno = null
 var cinematica = null             # el Tween de la cinematica, o null
+var t_cinematica = 0.0
 var reloj = 0.0
 
 # Interfaz (se arma en codigo).
@@ -148,8 +149,10 @@ func _soltar_llave(pos, nombre):
 func _process(delta):
 	reloj += delta
 	if cinematica != null:
-		# Saltar la cinematica.
-		if Input.is_action_just_pressed("saltar") or Input.is_action_just_pressed("chispazo"):
+		# Saltar la cinematica: solo con ESPACIO y despues de un rato
+		# (si no, el mismo golpe o salto con el que se tomo la llave la cortaba al instante).
+		t_cinematica += delta
+		if t_cinematica >= espera_saltar and Input.is_action_just_pressed("saltar"):
 			cinematica.custom_step(100.0)
 		return
 	if get_tree().paused or hecho:
@@ -170,6 +173,27 @@ func _process(delta):
 					guardian = null
 	actualizar_panel()
 	_actualizar_jefe()
+
+
+# Donde esta lo que hay que hacer ahora (para el mapa), o null.
+func objetivo_pos():
+	if hecho:
+		return null
+	if llave != null and is_instance_valid(llave):
+		return llave.global_position
+	match ETAPAS[actual]["tipo"]:
+		"guardian":
+			if guardian != null and _vivo(guardian):
+				return guardian.global_position + Vector3(0, 1.5, 0)
+		"jefe":
+			if jefe != null and _vivo(jefe):
+				return jefe.global_position + Vector3(0, 2.0, 0)
+	return null
+
+
+# Enemigos de la etapa actual que siguen vivos (el mapa los marca en la etapa de "derrota N").
+func enemigos_vivos():
+	return enemigos[actual].filter(func(e): return _vivo(e))
 
 
 func _vivo(n):
@@ -211,8 +235,7 @@ func completar():
 		return
 	var salud = jugador.get_node_or_null("Salud") if jugador != null else null
 	if salud != null:
-		salud.vida_inicial += vida_extra
-		salud.curar(salud.vida_inicial)
+		salud.curar(salud.vida_inicial)   # se llena, pero el maximo sigue en 100
 	var rotos = sellos[actual]
 	empezar_etapa(siguiente)
 	mostrar_cinematica(siguiente, rotos)
@@ -241,6 +264,7 @@ func mostrar_cinematica(i, rotos):
 	var ambiente = entorno.ambient_light_energy if entorno != null else 0.0
 	var t = create_tween()
 	cinematica = t
+	t_cinematica = 0.0
 	t.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
 	t.tween_property(franja_arriba, "size:y", 70.0, 0.4)
 	t.parallel().tween_property(franja_abajo, "position:y", get_viewport().get_visible_rect().size.y - 70.0, 0.4)
@@ -261,7 +285,7 @@ func mostrar_cinematica(i, rotos):
 	t.tween_property(titulo, "modulate:a", 1.0, 0.4)
 	t.tween_property(subtitulo, "modulate:a", 1.0, 0.4)
 	t.tween_property(texto_obj, "modulate:a", 1.0, 0.4)
-	t.parallel().tween_property(saltar_txt, "modulate:a", 0.7, 0.4)
+	t.parallel().tween_property(saltar_txt, "modulate:a", 0.7, 0.4).set_delay(0.6)
 	t.tween_interval(2.4)
 	t.tween_property(titulo, "modulate:a", 0.0, 0.3)
 	t.parallel().tween_property(subtitulo, "modulate:a", 0.0, 0.3)

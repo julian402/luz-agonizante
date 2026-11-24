@@ -43,10 +43,6 @@ func _ready():
 
 
 func mostrar(vida):
-	# La vida maxima sube al pasar de etapa.
-	if salud.vida_inicial > barra.max_value:
-		barra.max_value = salud.vida_inicial
-		lenta.max_value = barra.max_value
 	barra.value = vida
 	numero.text = str(roundi(vida)) + " / " + str(roundi(barra.max_value))
 	# Si se cura, la blanca sube de una vez.

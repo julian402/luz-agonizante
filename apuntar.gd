@@ -3,9 +3,9 @@ extends Node
 @export var tecla = "chispazo"
 @export var alcance = 2.0
 @export_enum("Personaje", "Centro de la cámara", "Mouse") var desde = 0
-@export var danio = 1
+@export var danio = 2
 @export var cadencia = 0.3
-@export var danio_remate = 2   # daño del 3.er golpe del combo
+@export var danio_remate = 4   # daño del 3.er golpe del combo
 # Desde el Personaje ya no es un rayo: es una bola delante de Ceniza (se falla menos).
 @export var radio_golpe = 0.9
 @export var distancia_golpe = 1.1

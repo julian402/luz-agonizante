@@ -8,7 +8,7 @@ extends Node
 @export var maximo = 100.0
 @export var por_golpe = 14.0
 @export var radio = 4.5
-@export var danio = 3
+@export var danio = 5
 @export var proteccion = 0.4
 const DORADO = Color("#F2C14E")
 @onready var pj = get_parent()
