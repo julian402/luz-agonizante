@@ -9,6 +9,8 @@
 [ext_resource type="PackedScene" path="res://hud.tscn" id="9_hud"]
 [ext_resource type="Script" uid="uid://bh4fvfsglu50x" path="res://partida.gd" id="10_partida"]
 [ext_resource type="PackedScene" path="res://nivel.tscn" id="11_nivel"]
+[ext_resource type="Script" path="res://poder.gd" id="13_poder"]
+[ext_resource type="PackedScene" path="res://mapa.tscn" id="14_mapa"]
 [ext_resource type="Script" uid="uid://cf06v2fupkwsx" path="res://golpeado.gd" id="12_golpeado"]
 
 [sub_resource type="ProceduralSkyMaterial" id="CieloMat"]
@@ -72,9 +74,9 @@ shape = SubResource("Capsula")
 transform = Transform3D(-0.78, 0, 0, 0, 0.78, 0, 0, 0, -0.78, 0, 0, 0)
 
 [node name="Farol" type="OmniLight3D" parent="Personaje"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.3, 0.6)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.3, 0.2)
 light_color = Color(0.6, 0.7, 1, 1)
-light_energy = 0.6
+light_energy = 0.45
 omni_range = 3.0
 
 [node name="Apuntar" type="Node" parent="Personaje" unique_id=1632281735]
@@ -91,6 +93,9 @@ oscuridad = 8.0
 penumbra = 2.0
 reapariciones = 0
 
+[node name="Poder" type="Node" parent="Personaje"]
+script = ExtResource("13_poder")
+
 [node name="Golpeado" type="Node" parent="Personaje" unique_id=1739896369]
 script = ExtResource("12_golpeado")
 
@@ -100,3 +105,5 @@ script = ExtResource("12_golpeado")
 script = ExtResource("10_partida")
 
 [node name="Nivel" parent="." unique_id=1244862489 instance=ExtResource("11_nivel")]
+
+[node name="Mapa" parent="." instance=ExtResource("14_mapa")]

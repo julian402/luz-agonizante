@@ -1,6 +1,7 @@
 [gd_scene format=3]
 
 [ext_resource type="Script" path="res://hud.gd" id="1_hud"]
+[ext_resource type="Script" path="res://habilidades.gd" id="2_habilidades"]
 
 [sub_resource type="Gradient" id="BordeGradiente"]
 offsets = PackedFloat32Array(0, 0.35, 1)
@@ -101,6 +102,15 @@ theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 8
 theme_override_font_sizes/font_size = 24
 text = "A SALVO"
+
+[node name="Habilidades" type="Control" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("2_habilidades")
 
 [node name="Fin" type="Label" parent="."]
 visible = false

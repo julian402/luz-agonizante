@@ -69,6 +69,10 @@ func golpe_cercano(este_danio):
 		if c in golpeados or not c.has_method("recibir_golpe"):
 			continue
 		golpeados.append(c)
+		# Cada golpe a un enemigo carga el Estallido de luz.
+		var poder = pj.get_node_or_null("Poder")
+		if poder != null and c.is_in_group("enemigos"):
+			poder.sumar(poder.por_golpe)
 		mostrar_chispa(c.global_position + Vector3(0, 1, 0) - adelante * 0.3, 0.3)
 		print("le dio a ", c.name, " a ", snappedf(pj.global_position.distance_to(c.global_position), 0.01), " m")
 		c.recibir_golpe(este_danio)

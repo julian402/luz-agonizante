@@ -24,6 +24,7 @@ const ANIM = {
 	"crouch": ["Dodge_Forward", 1.6],
 	"hit": ["Hit_A", 2.0],
 	"die": ["Death_A", 1.0],
+	"poder": ["Spellcast_Shoot", 2.2],
 }
 const EN_BUCLE = ["Idle", "Running_A", "Jump_Idle"]
 # Armas del pack que Ceniza no usa (se queda con las dagas).
