@@ -28,6 +28,8 @@
 [ext_resource type="PackedScene" path="res://Assets/RuinsGLB/Moss/GroundMossMD.glb" id="26_4e0qi"]
 [ext_resource type="PackedScene" path="res://Assets/RuinsGLB/Moss/MossMD.glb" id="27_arj4k"]
 [ext_resource type="PackedScene" path="res://lampara.tscn" id="28_fcffb"]
+[ext_resource type="PackedScene" path="res://escupidor.tscn" id="90_escupidor"]
+[ext_resource type="PackedScene" path="res://espectro.tscn" id="91_espectro"]
 [ext_resource type="PackedScene" path="res://Assets/RuinsGLB/Pillars/PillarRoundCut.glb" id="29_a8wvi"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_a8id1"]
@@ -6754,3 +6756,33 @@ outline_modulate = Color(0.03, 0.03, 0.05, 0.95)
 text = "El Faro · Luz Eterna"
 font_size = 52
 outline_size = 10
+
+[node name="Espectro1" parent="TorresYCampanario" instance=ExtResource("91_espectro")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 76, 7.5, 0)
+
+[node name="Espectro2" parent="TorresYCampanario" instance=ExtResource("91_espectro")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 97, 25.5, 0)
+
+[node name="EspectroPozo1" parent="MurallasYPozoAbismo" instance=ExtResource("91_espectro")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 182, -5.5, 0)
+
+[node name="EspectroPozo2" parent="MurallasYPozoAbismo" instance=ExtResource("91_espectro")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 181, -12.5, 0)
+
+[node name="EscupidorMuralla" parent="MurallasYPozoAbismo" instance=ExtResource("90_escupidor")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 149, 3.25, 0)
+
+[node name="Escupidor1" parent="Alcantarillas" instance=ExtResource("90_escupidor")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 104, -13.55, 0)
+
+[node name="Escupidor2" parent="Alcantarillas" instance=ExtResource("90_escupidor")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 156, -13.95, 0)
+
+[node name="EscupidorCripta" parent="CriptaOscura" instance=ExtResource("90_escupidor")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 40, -13.95, 0)
+
+[node name="EspectroCripta" parent="CriptaOscura" instance=ExtResource("91_espectro")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, -10.5, 0)
+
+[node name="EscupidorTrono" parent="TronoYFaro" instance=ExtResource("90_escupidor")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 150, -27.95, 0)
