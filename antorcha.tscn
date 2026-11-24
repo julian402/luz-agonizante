@@ -152,14 +152,14 @@ scale_amount_min = 0.5
 [node name="Luz" type="OmniLight3D" parent="." unique_id=824524703]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.25, -0.75)
 light_color = Color(1, 0.68, 0.28, 1)
-light_energy = 2.6
+light_energy = 3.5
 distance_fade_enabled = true
 distance_fade_begin = 20.0
 distance_fade_length = 6.0
-omni_range = 8.5
-omni_attenuation = 1.25
+omni_range = 8.0
+omni_attenuation = 2.0
 script = ExtResource("2_wxyjw")
-energia_base = 2.6
+energia_base = 3.5
 
 [node name="ZonaLuz" type="Area3D" parent="." unique_id=600488625 groups=["luz"]]
 script = ExtResource("3_dhdgn")
