@@ -29,6 +29,7 @@ func _entra(cuerpo):
 	if salud == null:
 		return
 	salud.curar(valor)
-	Efectos.numero(get_parent(), global_position + Vector3(0, 0.6, 0), "+" + str(valor), Color("#F2C14E"))
+	Efectos.anillo(get_parent(), cuerpo.global_position, Color("#F2C14E"), 1.6)
+	Efectos.numero(get_parent(), global_position + Vector3(0, 0.6, 0), "+" + str(valor), Color("#6BE36B"))
 	print("orbe +", valor, " cuadro ", Engine.get_physics_frames())
 	queue_free()

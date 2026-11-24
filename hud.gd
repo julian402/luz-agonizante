@@ -8,6 +8,7 @@ extends CanvasLayer
 @onready var borde = $Borde      # bordes de pantalla: rojos al golpe, oscuros en la oscuridad
 @onready var fin = $Fin
 var salud = null
+var pj = null
 var relleno = null
 var tiempo = 0.0
 var rojo = 0.0                   # cuanto rojo queda del ultimo golpe (0.7 -> 0 en 0.3 s)
@@ -27,7 +28,7 @@ const OSCURO = Color(0.08, 0.02, 0.15)
 func _ready():
 	# La Partida lo busca por el grupo para mostrar el final.
 	add_to_group("hud")
-	var pj = get_tree().get_first_node_in_group("jugador")
+	pj = get_tree().get_first_node_in_group("jugador")
 	salud = pj.get_node("Salud")
 	salud.cambio.connect(mostrar)
 	salud.golpeado.connect(_al_golpe)
@@ -52,6 +53,7 @@ func mostrar(vida):
 # Solo los golpes de enemigos (la oscuridad no llama esto).
 func _al_golpe(_danio):
 	rojo = 0.7
+	Efectos.chispas(pj.get_parent(), pj.global_position + Vector3(0, 1.0, 0), ROJO, 14)
 
 
 # En la luz la vida no cambia y no llega la senal: la zona se mira cada cuadro.

@@ -128,41 +128,49 @@ func animar_ataque():
 			pj.accion = "")
 
 
-# Medio arco delante de Ceniza: de arriba hacia abajo, como un tajo.
+# Un tajo fino delante de Ceniza que gira 90 grados de arriba hacia abajo en 0.1 s.
 # Golpe normal naranja; el remate es blanco y más grande.
 func mostrar_arco(remate):
-	var adentro = 0.6
-	var afuera = 1.3
-	var color = Color(1.0, 0.7, 0.28, 0.75)
-	var dura = 0.12
+	var adentro = 0.95
+	var afuera = 1.25
+	var color = Color(1.0, 0.7, 0.28, 0.85)
+	var dura = 0.1
 	if remate:
-		afuera = 1.7
-		color = Color(1, 1, 1, 0.9)
-		dura = 0.18
+		adentro = 1.1
+		afuera = 1.65
+		color = Color(1, 1, 1, 0.95)
+		dura = 0.14
 	var malla = ImmediateMesh.new()
 	malla.surface_begin(Mesh.PRIMITIVE_TRIANGLE_STRIP)
-	var pasos = 12
+	var pasos = 10
 	for i in pasos + 1:
-		# De 75 grados (arriba) a -45 grados (abajo), mirando hacia adelante (-z).
-		var a = deg_to_rad(lerpf(75.0, -45.0, float(i) / pasos))
+		# Un arco de 70 grados centrado adelante (-z); la punta es más fina.
+		var t = float(i) / pasos
+		var a = deg_to_rad(lerpf(35.0, -35.0, t))
 		var dir = Vector3(0, sin(a), -cos(a))
+		var grosor = lerpf(afuera, adentro + 0.04, t)
 		malla.surface_add_vertex(dir * adentro)
-		malla.surface_add_vertex(dir * afuera)
+		malla.surface_add_vertex(dir * grosor)
 	malla.surface_end()
 	var mat = StandardMaterial3D.new()
 	mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 	mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
 	mat.cull_mode = BaseMaterial3D.CULL_DISABLED
 	mat.albedo_color = color
+	# El pivote tiene la orientación de Ceniza; el arco gira dentro de él.
+	var pivote = Node3D.new()
+	pj.get_parent().add_child(pivote)
+	pivote.global_transform = Transform3D(pj.global_basis.orthonormalized(), pj.global_position + Vector3(0, 0.9, 0))
 	var arco = MeshInstance3D.new()
 	arco.mesh = malla
 	arco.material_override = mat
 	arco.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-	pj.get_parent().add_child(arco)
-	arco.global_transform = Transform3D(pj.global_basis.orthonormalized(), pj.global_position + Vector3(0, 0.9, 0))
+	pivote.add_child(arco)
+	arco.rotation.x = deg_to_rad(-55.0)
 	var t = arco.create_tween()
-	t.tween_property(mat, "albedo_color:a", 0.0, dura)
-	t.tween_callback(arco.queue_free)
+	t.tween_property(arco, "rotation:x", deg_to_rad(35.0), dura).set_ease(Tween.EASE_OUT)
+	t.tween_property(mat, "albedo_color:a", 0.0, 0.08)
+	t.tween_callback(pivote.queue_free)
 
 
 # El golpe se marca con una chispa naranja donde pega (o donde termina).

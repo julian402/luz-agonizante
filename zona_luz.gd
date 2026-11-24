@@ -23,6 +23,8 @@ func contar(cuerpo, cuanto):
 	if salud == null:
 		return
 	if tipo == 0:
+		if cuanto > 0 and salud.en_luz == 0 and cuerpo.is_inside_tree():
+			Efectos.anillo(cuerpo.get_parent(), cuerpo.global_position, Color(1, 0.82, 0.4, 0.8), 1.0)
 		salud.en_luz += cuanto
 	else:
 		salud.en_penumbra += cuanto
