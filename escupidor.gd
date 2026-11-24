@@ -81,16 +81,7 @@ func _preparar_modelo():
 		for n in ["Idle", "Run"]:
 			if anim.has_animation(n):
 				anim.get_animation(n).loop_mode = Animation.LOOP_LINEAR
-	for mi in $Modelo.find_children("*", "MeshInstance3D", true, false):
-		for i in mi.mesh.get_surface_count():
-			var mat = mi.mesh.surface_get_material(i)
-			if mat is StandardMaterial3D and mat.resource_name.begins_with("EyeGlow"):
-				var ojos = mat.duplicate()
-				ojos.emission_enabled = true
-				if ojos.emission == Color.BLACK:
-					ojos.emission = COLOR
-				ojos.emission_energy_multiplier = 3.0
-				mi.set_surface_override_material(i, ojos)
+	Esqueleto.preparar($Modelo, COLOR)
 	luz_mano = OmniLight3D.new()
 	luz_mano.light_color = COLOR
 	luz_mano.light_energy = 0.0
@@ -198,10 +189,10 @@ func cambiar_a(nuevo):
 		Estado.APUNTAR:
 			reloj = tiempo_aviso
 			apuntado = jugador.global_position + Vector3(0, 0.9, 0)
-			tocar("Scream", 2.5)
+			# Levanta el brazo todo el aviso: la bola sale cuando el brazo baja.
+			tocar("Attack", Esqueleto.rapidez_aviso(tiempo_aviso))
 		Estado.DISPARAR:
 			reloj = tiempo_disparo
-			tocar("Attack", 2.5)
 			disparar()
 		Estado.RECARGA:
 			reloj = tiempo_recarga

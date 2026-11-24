@@ -17,6 +17,7 @@ enum Estado { QUIETO, ACERCARSE, AVISO, GOLPE, RECARGA, HUIR }
 @export var patrulla_rango = 3.0
 # La luz que suelta al morir.
 @export var orbe_valor = 50
+const COLOR = Color("#FF3B30")   # ojos, chispas y muerte
 const ORBE = preload("res://orbe.tscn")
 const BARRA = preload("res://barra_enemigo.tscn")
 # Es pesado: al recibir un golpe retrocede poco (m/s y segundos).
@@ -38,11 +39,14 @@ var reloj_empujon = 0.0
 var origen_x = 0.0
 var dir_patrulla = -1.0
 var enfurecido = false
+var muerto = false
 var rayo_suelo: PhysicsRayQueryParameters3D
 var rayo_pared: PhysicsRayQueryParameters3D
 
 
 func _ready():
+	add_to_group("enemigos")
+	Esqueleto.preparar($Modelo, COLOR, 9.0)
 	jugador = get_tree().get_first_node_in_group("jugador")
 	origen_x = global_position.x
 	set_collision_mask_value(1, true)
@@ -79,6 +83,10 @@ func _ready():
 
 func _physics_process(delta):
 	velocity += get_gravity() * delta
+	if muerto:
+		velocity.x = 0.0
+		move_and_slide()
+		return
 	if jugador == null:
 		velocity.z = 0.0
 		move_and_slide()
@@ -162,7 +170,10 @@ func cambiar_a(nuevo):
 
 # Se llama igual que en la diana del Taller 8: el rayo ya la sabe usar.
 func recibir_golpe(cuanto):
+	if muerto:
+		return
 	vida -= cuanto
+	Efectos.chispas(get_parent(), global_position + Vector3(0, 1.6, 0), COLOR, 14)
 	print(name, " vida ", vida)
 	mostrar_vida()
 	if es_meta and not enfurecido and vida > 0.0 and vida <= vida_max * 0.5:
@@ -187,9 +198,24 @@ func recibir_golpe(cuanto):
 			var partida = get_tree().get_first_node_in_group("partida")
 			if partida != null:
 				partida.avisar_meta()
-		queue_free()
+		morir()
 		return
+	if estado != Estado.AVISO and estado != Estado.GOLPE:
+		tocar("hit")
 	Efectos.hitstop(get_tree(), 0.05 if cuanto < 2 else 0.12)
+
+
+# Animacion Death, se encoge con chispas y se borra.
+func morir():
+	muerto = true
+	aviso.visible = false
+	barra.visible = false
+	destello.light_energy = 0.0
+	collision_layer = 0
+	tocar("die")
+	await get_tree().create_timer(0.7).timeout
+	await Efectos.muerte($Modelo, COLOR)
+	queue_free()
 
 
 # El aviso le da tiempo al jugador: el golpe mira DÓNDE ESTÁ AHORA.
@@ -228,7 +254,7 @@ func patrullar():
 			return
 	velocity.x = dir_patrulla * rapidez * 0.4
 	basis = Basis.looking_at(Vector3(dir_patrulla, 0.0, 0.0))
-	anim.play("walk")
+	tocar("walk")
 
 
 func ir_a(destino):
@@ -240,10 +266,10 @@ func ir_a(destino):
 	basis = Basis.looking_at(Vector3(dir_x, 0.0, 0.0))
 	if is_on_floor() and (not _hay_suelo_adelante(dir_x) or _hay_pared_adelante(dir_x)):
 		velocity.x = 0.0
-		anim.play("idle")
+		tocar("idle")
 		return
 	velocity.x = dir_x * rapidez
-	anim.play("walk")
+	tocar("walk")
 
 
 func mirar_a(destino):
@@ -267,7 +293,22 @@ func _hay_pared_adelante(dir_x: float) -> bool:
 func frenar(animacion):
 	velocity.x = 0.0
 	velocity.z = 0.0
-	anim.play(animacion)
+	tocar(animacion)
+
+
+# Traduce al esqueleto. Es pesado: corre lento y el mazazo se prepara todo el aviso.
+func tocar(nombre):
+	var r = 1.0
+	match nombre:
+		"walk":
+			r = 0.6
+		"interact-right", "attack-melee-right":
+			r = Esqueleto.rapidez_aviso(tiempo_aviso)
+		"hit":
+			r = 3.0
+		"die":
+			r = 1.6
+	Esqueleto.tocar(anim, nombre, r)
 
 
 func distancia():
