@@ -15,8 +15,8 @@ const ROJO = Color("#E8433A")
 const ETAPAS = [
 	{
 		"numero": "ETAPA 1", "nombre": "LAS TUMBAS",
-		"objetivo": "Encuentra la llave en el fondo de la cripta",
-		"tipo": "llave", "llave": Vector3(49.5, -16.4, 0),
+		"objetivo": "Vence al Coloso de la Cripta y toma su llave",
+		"tipo": "guardian", "guardian": "ColosoCripta", "llave_nombre": "Llave de la Cripta",
 		"vista": Rect2(0, -19, 60, 29), "inicio": Vector3(5, 0.1, 0),
 		"sellos": [[46.0, 4.75, 0.6, 9.5], [56.5, -9.75, 0.6, 8.5]],
 	},
@@ -30,7 +30,7 @@ const ETAPAS = [
 	{
 		"numero": "ETAPA 3", "nombre": "LA GUARDIA",
 		"objetivo": "Vence al Guardián y toma la Llave del Trono",
-		"tipo": "guardian", "guardian": "ColosoMuralla",
+		"tipo": "guardian", "guardian": "ColosoMuralla", "llave_nombre": "Llave del Trono",
 		"vista": Rect2(126, -21, 68, 31), "inicio": Vector3(133, 0.1, 0),
 		"sellos": [[183.25, -19.5, 13.5, 0.6]],
 	},
@@ -102,7 +102,6 @@ func _ready():
 	# Enemigos de cada etapa (para contar los que caen).
 	for e in get_tree().get_nodes_in_group("enemigos"):
 		enemigos[etapa_de(e.global_position)].append(e)
-	guardian = nivel.find_child(ETAPAS[2]["guardian"], true, false)
 	for m in get_tree().get_nodes_in_group("meta"):
 		jefe = m
 	# Reintento: se salta lo que ya estaba hecho.
@@ -139,7 +138,14 @@ func etapa_de(p):
 func empezar_etapa(i):
 	actual = i
 	hecho = false
+	llave = null
+	guardian = null
 	var e = ETAPAS[i]
+	if e["tipo"] == "guardian":
+		# El guardian de la etapa: al caer suelta la llave.
+		guardian = get_tree().current_scene.get_node("Nivel").find_child(e["guardian"], true, false)
+		if guardian != null:
+			pos_guardian = guardian.global_position
 	if e["tipo"] == "llave":
 		_soltar_llave(e["llave"], "Llave de la Cripta")
 	actualizar_panel()
@@ -148,8 +154,9 @@ func empezar_etapa(i):
 func _soltar_llave(pos, nombre):
 	llave = LLAVE.instantiate()
 	llave.nombre = nombre
+	# La posicion va ANTES de add_child: la llave guarda su altura en _ready para flotar.
+	llave.position = pos   # Nivel esta en el origen: local = global
 	get_tree().current_scene.get_node("Nivel").add_child(llave)
-	llave.global_position = pos
 	llave.recogida.connect(completar)
 
 
@@ -178,7 +185,7 @@ func _process(delta):
 					pos_guardian = guardian.global_position
 				elif llave == null:
 					# El Guardian cae y suelta la llave.
-					_soltar_llave(pos_guardian + Vector3(0, 1.2, 0), "Llave del Trono")
+					_soltar_llave(pos_guardian + Vector3(0, 1.2, 0), e["llave_nombre"])
 					guardian = null
 	actualizar_panel()
 	_actualizar_jefe()
@@ -207,7 +214,7 @@ func actualizar_panel():
 			t = t % e["meta"] + "   (%d/%d)" % [mini(caidos(actual), e["meta"]), e["meta"]]
 		"guardian":
 			if guardian == null and llave != null and is_instance_valid(llave):
-				t = "¡Toma la Llave del Trono!"
+				t = "¡Toma la " + e["llave_nombre"] + "!"
 	panel_objetivo.text = "◆ " + t
 	panel_objetivo.modulate = Color(0.6, 1, 0.6) if hecho else Color.WHITE
 
