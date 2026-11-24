@@ -22,7 +22,10 @@ var saltos = 0   # vuelve a 0 al tocar el suelo
 var soltar_plataforma = 0.0
 var reloj_coyote = 0.0
 var reloj_buffer_salto = 0.0
-var forma_plataforma = CylinderShape3D.new()
+var forma_plataforma = CapsuleShape3D.new()
+var plataformas_ignoradas = {}   # plataformas que el cuerpo está atravesando
+var plataforma_soltada = null    # la tabla de la que se bajó con abajo + saltar
+const AYUDA_SUBIR = 1.0          # si el tope de la tabla queda hasta 1 m sobre los pies, sube a ella
 var consulta_plataforma = PhysicsShapeQueryParameters3D.new()
 var consulta_suelo: PhysicsRayQueryParameters3D
 
@@ -32,8 +35,8 @@ func _ready():
 		camara = get_viewport().get_camera_3d()
 	set_collision_mask_value(1, true)
 	set_collision_mask_value(2, true)
-	forma_plataforma.radius = 0.30
-	forma_plataforma.height = 1.50
+	forma_plataforma.radius = 0.37
+	forma_plataforma.height = 1.75
 	consulta_plataforma.shape = forma_plataforma
 	consulta_plataforma.collision_mask = 2
 	consulta_plataforma.exclude = [get_rid()]
@@ -78,8 +81,11 @@ func _physics_process(delta):
 	if Input.is_action_just_released("saltar") and velocity.y > 0.0:
 		velocity.y *= 0.58
 
-	var atravesando = soltar_plataforma > 0.0 or velocity.y > 0.05 or _cuerpo_en_plataforma()
+	# subiendo o bajando a propósito: se ignoran todas las plataformas atravesables
+	var atravesando = soltar_plataforma > 0.0 or velocity.y > 0.05
 	set_collision_mask_value(2, not atravesando)
+	# si no, solo se ignoran las que el cuerpo ya tiene encima de los pies
+	_actualizar_plataformas_ignoradas()
 
 	var entrada = Vector3.ZERO
 	if prueba == 0:
@@ -117,12 +123,56 @@ func _physics_process(delta):
 func _sobre_plataforma() -> bool:
 	consulta_suelo.from = global_position + Vector3(0, 0.2, 0)
 	consulta_suelo.to = global_position + Vector3(0, -0.25, 0)
-	return not get_world_3d().direct_space_state.intersect_ray(consulta_suelo).is_empty()
+	var r = get_world_3d().direct_space_state.intersect_ray(consulta_suelo)
+	if r.is_empty():
+		return false
+	plataforma_soltada = r.collider
+	return true
 
 
-func _cuerpo_en_plataforma() -> bool:
-	consulta_plataforma.transform = Transform3D(Basis.IDENTITY, global_position + Vector3(0, 0.90, 0))
-	return not get_world_3d().direct_space_state.intersect_shape(consulta_plataforma, 1).is_empty()
+# Cada tabla atravesable que el cuerpo toca y que queda por encima de los pies:
+#  - si el tope está cerca (hasta AYUDA_SUBIR) y no vamos subiendo, el personaje
+#    se impulsa un poquito y queda parado encima (no hace falta caer justo con los pies);
+#  - si está más alta, se atraviesa (excepción de colisión).
+# La tabla que se pisa sigue siendo sólida.
+func _actualizar_plataformas_ignoradas():
+	consulta_plataforma.transform = Transform3D(Basis.IDENTITY, global_position + Vector3(0, 0.875, 0))
+	var dentro = {}
+	var pies = global_position.y
+	for r in get_world_3d().direct_space_state.intersect_shape(consulta_plataforma, 8):
+		var c = r.collider
+		if not c is CollisionObject3D:
+			continue
+		var caja = _caja_plataforma(c, r.shape)
+		var tope = caja.end.y
+		if tope <= pies + 0.05:
+			continue
+		dentro[c] = true
+		var encima = global_position.x > caja.position.x - 0.25 and global_position.x < caja.end.x + 0.25
+		var subir = encima and tope - pies <= AYUDA_SUBIR and velocity.y <= 0.05
+		if subir and soltar_plataforma <= 0.0 and c != plataforma_soltada:
+			velocity.y = sqrt(2.0 * gravedad * (tope - pies + 0.15))
+	if plataforma_soltada != null and not dentro.has(plataforma_soltada) and soltar_plataforma <= 0.0:
+		plataforma_soltada = null
+	for c in plataformas_ignoradas.keys():
+		if not dentro.has(c) and is_instance_valid(c):
+			remove_collision_exception_with(c)
+	for c in dentro:
+		if not plataformas_ignoradas.has(c):
+			add_collision_exception_with(c)
+	plataformas_ignoradas = dentro
+
+
+func _caja_plataforma(c: CollisionObject3D, indice: int) -> AABB:
+	var duenio = c.shape_find_owner(indice)
+	var forma = c.shape_owner_get_shape(duenio, 0)
+	var xf = c.global_transform * c.shape_owner_get_transform(duenio)
+	var caja: AABB
+	if forma is BoxShape3D:
+		caja = AABB(-forma.size * 0.5, forma.size)
+	else:
+		caja = forma.get_debug_mesh().get_aabb()
+	return xf * caja
 
 
 func elegir_estado():
