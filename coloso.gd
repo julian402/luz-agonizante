@@ -48,6 +48,8 @@ func _ready():
 	add_to_group("enemigos")
 	if es_meta:
 		add_to_group("meta")   # el mapa lo marca con una estrella
+		# El jefe es mas grande que los demas Colosos.
+		$Modelo.scale *= 1.35
 	Esqueleto.preparar($Modelo, COLOR, 9.0)
 	jugador = get_tree().get_first_node_in_group("jugador")
 	origen_x = global_position.x
@@ -74,6 +76,9 @@ func _ready():
 	aviso.modulate = Color("#E8433A")
 	aviso.visible = false
 	add_child(aviso)
+	if es_meta:
+		barra.position.y = 4.6
+		aviso.position.y = 5.2
 	destello = OmniLight3D.new()
 	destello.light_color = Color("#E8433A")
 	destello.light_energy = 0.0

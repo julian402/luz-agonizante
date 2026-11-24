@@ -1,0 +1,80 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://llave.gd" id="1_llave"]
+
+[sub_resource type="StandardMaterial3D" id="Oro"]
+albedo_color = Color(1, 0.82, 0.35, 1)
+metallic = 0.6
+roughness = 0.3
+emission_enabled = true
+emission = Color(1, 0.75, 0.25, 1)
+emission_energy_multiplier = 2.5
+
+[sub_resource type="TorusMesh" id="Anillo"]
+material = SubResource("Oro")
+inner_radius = 0.12
+outer_radius = 0.22
+rings = 16
+ring_segments = 8
+
+[sub_resource type="CylinderMesh" id="Cana"]
+material = SubResource("Oro")
+top_radius = 0.045
+bottom_radius = 0.045
+height = 0.55
+radial_segments = 8
+
+[sub_resource type="BoxMesh" id="Diente"]
+material = SubResource("Oro")
+size = Vector3(0.14, 0.07, 0.06)
+
+[sub_resource type="StandardMaterial3D" id="MatHalo"]
+transparency = 1
+blend_mode = 1
+shading_mode = 0
+albedo_color = Color(1, 0.78, 0.32, 0.25)
+
+[sub_resource type="SphereMesh" id="Halo"]
+material = SubResource("MatHalo")
+radius = 0.45
+height = 0.9
+
+[sub_resource type="SphereShape3D" id="Forma"]
+radius = 0.7
+
+[node name="Llave" type="Area3D"]
+script = ExtResource("1_llave")
+
+[node name="Malla" type="Node3D" parent="."]
+
+[node name="Anillo" type="MeshInstance3D" parent="Malla"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0.3, 0)
+cast_shadow = 0
+mesh = SubResource("Anillo")
+
+[node name="Cana" type="MeshInstance3D" parent="Malla"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
+cast_shadow = 0
+mesh = SubResource("Cana")
+
+[node name="Diente1" type="MeshInstance3D" parent="Malla"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.08, -0.3, 0)
+cast_shadow = 0
+mesh = SubResource("Diente")
+
+[node name="Diente2" type="MeshInstance3D" parent="Malla"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.08, -0.17, 0)
+cast_shadow = 0
+mesh = SubResource("Diente")
+
+[node name="Halo" type="MeshInstance3D" parent="Malla"]
+cast_shadow = 0
+mesh = SubResource("Halo")
+
+[node name="Forma" type="CollisionShape3D" parent="."]
+shape = SubResource("Forma")
+
+[node name="Luz" type="OmniLight3D" parent="."]
+light_color = Color(1, 0.8, 0.4, 1)
+light_energy = 1.5
+omni_range = 3.5

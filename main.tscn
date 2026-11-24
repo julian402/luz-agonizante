@@ -11,6 +11,7 @@
 [ext_resource type="PackedScene" path="res://nivel.tscn" id="11_nivel"]
 [ext_resource type="Script" path="res://poder.gd" id="13_poder"]
 [ext_resource type="PackedScene" path="res://mapa.tscn" id="14_mapa"]
+[ext_resource type="Script" path="res://etapas.gd" id="15_etapas"]
 [ext_resource type="Script" uid="uid://cf06v2fupkwsx" path="res://golpeado.gd" id="12_golpeado"]
 
 [sub_resource type="ProceduralSkyMaterial" id="CieloMat"]
@@ -91,7 +92,7 @@ vida = 100
 invulnerable = 0.8
 oscuridad = 8.0
 penumbra = 2.0
-reapariciones = 0
+reapariciones = 2
 
 [node name="Poder" type="Node" parent="Personaje"]
 script = ExtResource("13_poder")
@@ -107,3 +108,6 @@ script = ExtResource("10_partida")
 [node name="Nivel" parent="." unique_id=1244862489 instance=ExtResource("11_nivel")]
 
 [node name="Mapa" parent="." instance=ExtResource("14_mapa")]
+
+[node name="Etapas" type="Node" parent="."]
+script = ExtResource("15_etapas")

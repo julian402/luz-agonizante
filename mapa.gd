@@ -92,6 +92,8 @@ func alternar():
 	var partida = get_tree().get_first_node_in_group("partida")
 	if partida != null and partida.estado != 0:   # la partida ya termino
 		return
+	if get_tree().paused and not abierto:   # otra cosa pauso (una cinematica)
+		return
 	abierto = not abierto
 	get_tree().paused = abierto
 	# El HUD se esconde mientras se mira el mapa.
@@ -168,7 +170,7 @@ func _dibujar_completo(pantalla):
 	var vistas_pct = 0
 	var total = maxi(1, int(ceil(mundo.size.x / celda) * ceil(mundo.size.y / celda)))
 	vistas_pct = mini(100, roundi(100.0 * vistas.size() / total))
-	var leyenda = "●  Ceniza      ●  Antorcha (a salvo)      ■  Bóveda      ★  Sombra Madre      Explorado: %d%%      M: volver" % vistas_pct
+	var leyenda = "●  Ceniza     ●  Antorcha (punto de control)     ◆  Llave     ▮  Sello     ★  Sombra Madre     Explorado: %d%%     M: volver" % vistas_pct
 	lienzo.draw_string(fuente, Vector2(0, pantalla.y - 40), leyenda, HORIZONTAL_ALIGNMENT_CENTER, pantalla.x, 18, Color(1, 1, 1, 0.85))
 
 
@@ -183,6 +185,22 @@ func _iconos(a_pantalla, limite, tam):
 		var p = a_pantalla.call(boveda)
 		if limite.has_point(p):
 			lienzo.draw_rect(Rect2(p - Vector2(4, 4) * tam, Vector2(8, 8) * tam), Color("#C98A3B"))
+	# Sellos (morado) y llaves (dorado) que ya se vieron.
+	for s in get_tree().get_nodes_in_group("sellos"):
+		if is_instance_valid(s) and not s.abierto and visto(Vector2(s.global_position.x, s.global_position.y)):
+			var med = Vector2(s.caja.x, s.caja.y) * 0.5
+			var p0 = a_pantalla.call(Vector2(s.global_position.x - med.x, s.global_position.y + med.y))
+			var p1 = a_pantalla.call(Vector2(s.global_position.x + med.x, s.global_position.y - med.y))
+			var r = Rect2(p0, (p1 - p0).abs().max(Vector2(3, 3) * tam)).intersection(limite)
+			if r.has_area():
+				lienzo.draw_rect(r, Color(0.7, 0.5, 1.0, 0.6 + 0.3 * sin(tiempo * 4.0)))
+	for l in get_tree().get_nodes_in_group("llaves"):
+		var lp = Vector2(l.global_position.x, l.global_position.y)
+		if visto(lp):
+			var p = a_pantalla.call(lp)
+			if limite.has_point(p):
+				var d = 5.0 * tam
+				lienzo.draw_colored_polygon(PackedVector2Array([p + Vector2(0, -d), p + Vector2(d, 0), p + Vector2(0, d), p + Vector2(-d, 0)]), Color("#FFE08A"))
 	for m in get_tree().get_nodes_in_group("meta"):
 		var mp = Vector2(m.global_position.x, m.global_position.y + 1.5)
 		if visto(mp):

@@ -31,6 +31,9 @@ func _physics_process(delta):
 		if reloj <= 0.001:
 			reiniciar()
 		return
+	# Con el mapa abierto o en una cinematica el reloj no corre.
+	if get_tree().paused:
+		return
 	tiempo = maxf(tiempo - delta, 0.0)
 	if tiempo <= 0.001:
 		if gana_con_tiempo:
