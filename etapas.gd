@@ -3,7 +3,7 @@ extends Node
 # Las etapas de la partida: Tumbas -> Catacumbas -> Guardia -> Trono (jefe).
 # Cada etapa tiene un objetivo. Al cumplirlo se rompe el Sello de luz que cierra la siguiente,
 # la camara se aleja para mostrarla y aparece su titulo. La ultima es la Sombra Madre.
-# Si Ceniza pierde todas las vidas, la partida vuelve a empezar en la etapa a la que habia llegado.
+# Si Ceniza muere, la partida vuelve a empezar desde la Etapa 1 con todos los enemigos otra vez.
 
 const SELLO = preload("res://sello.gd")
 const LLAVE = preload("res://llave.tscn")
@@ -42,9 +42,6 @@ const ETAPAS = [
 		"sellos": [],
 	},
 ]
-
-# static: sobrevive a recargar la escena (reintento desde la etapa alcanzada).
-static var etapa_guardada = 0
 
 @export var intro = true          # cinematica al empezar
 @export var vida_extra = 20.0     # vida maxima que gana Ceniza al pasar de etapa
@@ -104,20 +101,8 @@ func _ready():
 		enemigos[etapa_de(e.global_position)].append(e)
 	for m in get_tree().get_nodes_in_group("meta"):
 		jefe = m
-	# Reintento: se salta lo que ya estaba hecho.
-	actual = clampi(etapa_guardada, 0, ETAPAS.size() - 1)
-	for i in actual:
-		for s in sellos[i]:
-			s.abrir(true)
-	if actual > 0 and jugador != null:
-		jugador.global_position = ETAPAS[actual]["inicio"]
-		var salud = jugador.get_node_or_null("Salud")
-		if salud != null:
-			salud.punto = ETAPAS[actual]["inicio"]
-		if camara != null and "posicion_suave" in camara:
-			camara.posicion_suave = jugador.global_position + Vector3(0, 3, 9.2)
-			camara.global_position = camara.posicion_suave
-	empezar_etapa(actual)
+	# Siempre se empieza desde la Etapa 1 (sin puntos de control).
+	empezar_etapa(0)
 	if intro:
 		mostrar_cinematica(actual, null)
 
@@ -162,10 +147,6 @@ func _soltar_llave(pos, nombre):
 
 func _process(delta):
 	reloj += delta
-	# Si se gano la partida, el proximo intento empieza desde el principio.
-	var partida = get_tree().get_first_node_in_group("partida")
-	if partida != null and partida.estado == 1:
-		etapa_guardada = 0
 	if cinematica != null:
 		# Saltar la cinematica.
 		if Input.is_action_just_pressed("saltar") or Input.is_action_just_pressed("chispazo"):
@@ -228,12 +209,10 @@ func completar():
 	var siguiente = actual + 1
 	if siguiente >= ETAPAS.size():
 		return
-	etapa_guardada = siguiente
 	var salud = jugador.get_node_or_null("Salud") if jugador != null else null
 	if salud != null:
 		salud.vida_inicial += vida_extra
 		salud.curar(salud.vida_inicial)
-		salud.punto = ETAPAS[siguiente]["inicio"]
 	var rotos = sellos[actual]
 	empezar_etapa(siguiente)
 	mostrar_cinematica(siguiente, rotos)

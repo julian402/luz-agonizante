@@ -170,7 +170,7 @@ func _dibujar_completo(pantalla):
 	var vistas_pct = 0
 	var total = maxi(1, int(ceil(mundo.size.x / celda) * ceil(mundo.size.y / celda)))
 	vistas_pct = mini(100, roundi(100.0 * vistas.size() / total))
-	var leyenda = "●  Ceniza     ●  Antorcha (punto de control)     ◆  Llave     ▮  Sello     ★  Sombra Madre     Explorado: %d%%     M: volver" % vistas_pct
+	var leyenda = "●  Ceniza     ●  Antorcha (a salvo)     ◆  Llave     ▮  Sello     ★  Sombra Madre     Explorado: %d%%     M: volver" % vistas_pct
 	lienzo.draw_string(fuente, Vector2(0, pantalla.y - 40), leyenda, HORIZONTAL_ALIGNMENT_CENTER, pantalla.x, 18, Color(1, 1, 1, 0.85))
 
 

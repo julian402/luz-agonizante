@@ -79,15 +79,6 @@ func bajar(cuanto):
 		sin_vida.emit()
 
 
-# Punto de control: la ultima antorcha que toco (ahi reaparece).
-func marcar_punto(p):
-	var nuevo = Vector3(p.x, p.y + 0.2, 0.0)
-	if nuevo.distance_to(punto) < 1.0:
-		return
-	punto = nuevo
-	Efectos.numero(pj.get_parent(), pj.global_position + Vector3(0, 2.3, 0), "PUNTO GUARDADO", Color(1, 0.9, 0.6))
-
-
 # Se busca aqui y no en _ready(): la Partida quiza todavia no existia.
 func _al_quedar_sin_vida():
 	if reapariciones > 0:

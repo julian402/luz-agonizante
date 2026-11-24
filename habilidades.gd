@@ -46,7 +46,6 @@ func _process(delta):
 func _draw():
 	if pj == null:
 		return
-	_vidas()
 	var x = 20.0
 	var y = size.y - ALTO - 20.0
 	# Combo: 3 golpes, el tercero es el remate (blanco).
@@ -86,42 +85,6 @@ func _draw():
 		_barra(Vector2(x + 12, y + 38), parte, color)
 		if listo:
 			draw_string(fuente, Vector2(x, y - 6), "¡LISTO!", HORIZONTAL_ALIGNMENT_CENTER, ANCHO, 16, DORADO)
-
-
-# Llamitas al lado de la barra de vida: una por vida que queda.
-func _vidas():
-	var salud = pj.get_node_or_null("Salud")
-	if salud == null:
-		return
-	if not salud.has_meta("vidas_total"):
-		salud.set_meta("vidas_total", salud.reapariciones + 1)
-	var total = salud.get_meta("vidas_total")
-	var quedan = salud.reapariciones + (1 if salud.vida > 0 else 0)
-	var x0 = 545.0
-	draw_string(fuente, Vector2(x0, 42), "VIDAS", HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color(1, 1, 1, 0.7))
-	for i in total:
-		var c = Vector2(x0 + 66 + i * 26, 35)
-		var color = DORADO if i < quedan else GRIS
-		if i == quedan - 1 and quedan == 1:
-			color = DORADO.lerp(Color("#E8433A"), 0.5 + 0.5 * sin(tiempo * 8.0))   # la ultima late
-		_llama(c, color)
-
-
-func _llama(c, color):
-	var puntos = PackedVector2Array()
-	for k in 16:
-		var a = TAU * k / 16.0
-		var r = 8.0
-		var p = Vector2(sin(a) * r * 0.8, -cos(a) * r)
-		if p.y < 0.0:
-			p.x *= 1.0 + p.y / (r * 1.6)   # punta arriba
-			p.y *= 1.5
-		puntos.append(c + p)
-	draw_colored_polygon(puntos, Color(0, 0, 0, 0.5))
-	var chicos = PackedVector2Array()
-	for p in puntos:
-		chicos.append(c + (p - c) * 0.82)
-	draw_colored_polygon(chicos, color)
 
 
 func _tarjeta(p, titulo, tecla, resaltada):

@@ -92,7 +92,7 @@ vida = 100
 invulnerable = 0.8
 oscuridad = 8.0
 penumbra = 2.0
-reapariciones = 2
+reapariciones = 0
 
 [node name="Poder" type="Node" parent="Personaje"]
 script = ExtResource("13_poder")
