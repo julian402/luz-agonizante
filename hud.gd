@@ -43,6 +43,10 @@ func _ready():
 
 
 func mostrar(vida):
+	# La vida maxima sube al pasar de etapa.
+	if salud.vida_inicial > barra.max_value:
+		barra.max_value = salud.vida_inicial
+		lenta.max_value = barra.max_value
 	barra.value = vida
 	numero.text = str(roundi(vida)) + " / " + str(roundi(barra.max_value))
 	# Si se cura, la blanca sube de una vez.
@@ -65,7 +69,7 @@ func _process(delta):
 	var color = DORADO
 	var oscuro = 0.0
 	if salud.en_luz > 0:
-		texto_zona.text = "A SALVO"
+		texto_zona.text = "A SALVO" if salud.vida >= salud.vida_inicial else "A SALVO  ·  CURANDO +" + str(roundi(salud.regen_luz)) + "/s"
 	elif salud.en_penumbra > 0:
 		color = GRIS
 		oscuro = 0.4

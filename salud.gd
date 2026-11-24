@@ -14,6 +14,8 @@ signal golpeado(danio)
 # Lo que quita por segundo a oscuras y en penumbra. En la luz no quita.
 @export var oscuridad = 20.0
 @export var penumbra = 5.0
+# En la luz se cura despacio: la luz es vida.
+@export var regen_luz = 6.0
 var reloj = 0.0
 var vida_inicial = 0.0
 var punto = Vector3.ZERO
@@ -33,6 +35,8 @@ func _ready():
 func _physics_process(delta):
 	reloj = maxf(reloj - delta, 0.0)
 	if en_luz > 0:
+		if vida > 0 and vida < vida_inicial:
+			curar(regen_luz * delta)
 		return
 	if en_penumbra > 0:
 		bajar(penumbra * delta)
@@ -75,15 +79,29 @@ func bajar(cuanto):
 		sin_vida.emit()
 
 
+# Punto de control: la ultima antorcha que toco (ahi reaparece).
+func marcar_punto(p):
+	var nuevo = Vector3(p.x, p.y + 0.2, 0.0)
+	if nuevo.distance_to(punto) < 1.0:
+		return
+	punto = nuevo
+	Efectos.numero(pj.get_parent(), pj.global_position + Vector3(0, 2.3, 0), "PUNTO GUARDADO", Color(1, 0.9, 0.6))
+
+
 # Se busca aqui y no en _ready(): la Partida quiza todavia no existia.
 func _al_quedar_sin_vida():
 	if reapariciones > 0:
 		reapariciones -= 1
 		vida = vida_inicial
+		Efectos.chispas(pj.get_parent(), pj.global_position + Vector3(0, 1, 0), Color("#6B3FA0"), 24)
 		pj.global_position = punto
+		pj.velocity = Vector3.ZERO
 		# La proteccion al reaparecer es el mismo reloj, pero mas largo.
 		reloj = espera_reaparecer
 		cambio.emit(vida)
+		Efectos.anillo(pj.get_parent(), punto, Color("#F2C14E"), 2.5)
+		var quedan = "ÚLTIMA VIDA" if reapariciones == 0 else "QUEDAN %d VIDAS" % (reapariciones + 1)
+		Efectos.numero(pj.get_parent(), punto + Vector3(0, 2.4, 0), quedan, Color("#F2C14E"))
 		print("reaparece cuadro ", Engine.get_physics_frames())
 		return
 	# Muere: animacion Death_A, queda quieta y 1 s despues sale la derrota.
