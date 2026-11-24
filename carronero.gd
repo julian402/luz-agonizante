@@ -9,7 +9,7 @@ enum Estado { QUIETO, ACERCARSE, AVISO, GOLPE, RECARGA }
 @export var tiempo_aviso = 0.4
 @export var tiempo_recarga = 1.5
 @export var alcance_golpe = 1.5
-@export var danio = 10
+@export var danio = 6
 @export var vida = 4.0
 @export var patrulla_rango = 4.0
 # La luz que suelta al morir.

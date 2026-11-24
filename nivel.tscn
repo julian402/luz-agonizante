@@ -4414,7 +4414,7 @@ rango_ataque = 2.5
 tiempo_aviso = 1.0
 tiempo_recarga = 2.4
 alcance_golpe = 3.0
-danio = 20
+danio = 12
 vida = 8.0
 vida_huida = 0.0
 
@@ -4989,7 +4989,7 @@ rango_ataque = 2.5
 tiempo_aviso = 1.0
 tiempo_recarga = 2.5
 alcance_golpe = 3.0
-danio = 20
+danio = 12
 vida = 8.0
 vida_huida = 0.0
 
@@ -5241,7 +5241,7 @@ rango_ataque = 2.5
 tiempo_aviso = 1.0
 tiempo_recarga = 2.5
 alcance_golpe = 3.0
-danio = 20
+danio = 12
 vida = 8.0
 vida_huida = 0.0
 
@@ -5586,7 +5586,7 @@ rango_ataque = 2.5
 tiempo_aviso = 1.0
 tiempo_recarga = 2.4
 alcance_golpe = 3.0
-danio = 20
+danio = 12
 vida = 8.0
 vida_huida = 0.0
 
@@ -5803,7 +5803,7 @@ rango_ataque = 2.5
 tiempo_aviso = 1.0
 tiempo_recarga = 2.4
 alcance_golpe = 3.0
-danio = 20
+danio = 12
 vida = 8.0
 vida_huida = 0.0
 
@@ -6422,7 +6422,7 @@ rango_ataque = 2.5
 tiempo_aviso = 1.0
 tiempo_recarga = 2.0
 alcance_golpe = 3.0
-danio = 20
+danio = 12
 vida = 40.0
 vida_huida = 0.0
 orbe_valor = 0
