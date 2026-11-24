@@ -1,0 +1,86 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://espectro.gd" id="1_espectro"]
+[ext_resource type="PackedScene" path="res://Assets/RuinsGLB/Accessories/Skull.glb" id="2_calavera"]
+
+[sub_resource type="SphereShape3D" id="Forma"]
+radius = 0.45
+
+[sub_resource type="StandardMaterial3D" id="MatOjo"]
+shading_mode = 0
+albedo_color = Color(0.85, 0.6, 1, 1)
+
+[sub_resource type="SphereMesh" id="Ojo"]
+material = SubResource("MatOjo")
+radius = 0.06
+height = 0.12
+radial_segments = 8
+rings = 4
+
+[sub_resource type="StandardMaterial3D" id="MatLlama"]
+shading_mode = 0
+vertex_color_use_as_albedo = true
+transparency = 1
+blend_mode = 1
+billboard_mode = 3
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+particles_anim_loop = false
+
+[sub_resource type="QuadMesh" id="Cuadro"]
+material = SubResource("MatLlama")
+size = Vector2(0.28, 0.28)
+
+[sub_resource type="Curve" id="Achicar"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="Gradient" id="Desvanecer"]
+colors = PackedColorArray(1, 1, 1, 0.9, 1, 1, 1, 0)
+
+[node name="Espectro" type="CharacterBody3D" groups=["enemigos"]]
+collision_layer = 4
+collision_mask = 3
+motion_mode = 1
+script = ExtResource("1_espectro")
+
+[node name="Forma" type="CollisionShape3D" parent="."]
+shape = SubResource("Forma")
+
+[node name="Modelo" type="Node3D" parent="."]
+
+[node name="Calavera" parent="Modelo" instance=ExtResource("2_calavera")]
+transform = Transform3D(-0.4, 0, 0, 0, 0.4, 0, 0, 0, -0.4, -0.02, -0.44, 0.12)
+
+[node name="OjoIzq" type="MeshInstance3D" parent="Modelo"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.14, 0.05, 0.3)
+cast_shadow = 0
+mesh = SubResource("Ojo")
+
+[node name="OjoDer" type="MeshInstance3D" parent="Modelo"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.14, 0.05, 0.3)
+cast_shadow = 0
+mesh = SubResource("Ojo")
+
+[node name="Llama" type="CPUParticles3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.15, -0.05)
+cast_shadow = 0
+amount = 24
+lifetime = 0.6
+local_coords = false
+mesh = SubResource("Cuadro")
+emission_shape = 1
+emission_sphere_radius = 0.3
+direction = Vector3(0, 1, 0)
+spread = 15.0
+gravity = Vector3(0, 1.5, 0)
+initial_velocity_min = 0.6
+initial_velocity_max = 1.2
+scale_amount_curve = SubResource("Achicar")
+color = Color(0.608, 0.361, 1, 1)
+color_ramp = SubResource("Desvanecer")
+
+[node name="Luz" type="OmniLight3D" parent="."]
+light_color = Color(0.608, 0.361, 1, 1)
+light_energy = 0.8
+omni_range = 3.0
