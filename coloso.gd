@@ -46,6 +46,8 @@ var rayo_pared: PhysicsRayQueryParameters3D
 
 func _ready():
 	add_to_group("enemigos")
+	if es_meta:
+		add_to_group("meta")   # el mapa lo marca con una estrella
 	Esqueleto.preparar($Modelo, COLOR, 9.0)
 	jugador = get_tree().get_first_node_in_group("jugador")
 	origen_x = global_position.x
