@@ -4417,8 +4417,8 @@ rango_ataque = 2.5
 tiempo_aviso = 1.0
 tiempo_recarga = 2.4
 alcance_golpe = 3.0
-danio = 16
-vida = 8.0
+danio = 22
+vida = 16.0
 vida_huida = 0.0
 
 [node name="OrbeCamp1" type="Area3D" parent="TorresYCampanario" unique_id=1430230509 instance=ExtResource("15_ht447")]
@@ -4992,8 +4992,8 @@ rango_ataque = 2.5
 tiempo_aviso = 1.0
 tiempo_recarga = 2.5
 alcance_golpe = 3.0
-danio = 16
-vida = 8.0
+danio = 22
+vida = 16.0
 vida_huida = 0.0
 
 [node name="ArmaduraCentro" type="Node3D" parent="TorresYCampanario" unique_id=1699020627]
@@ -5244,8 +5244,8 @@ rango_ataque = 2.5
 tiempo_aviso = 1.0
 tiempo_recarga = 2.5
 alcance_golpe = 3.0
-danio = 16
-vida = 8.0
+danio = 22
+vida = 16.0
 vida_huida = 0.0
 
 [node name="OrbeCriptaCentro" type="Area3D" parent="CriptaOscura" unique_id=560205660 instance=ExtResource("15_ht447")]
@@ -5589,8 +5589,8 @@ rango_ataque = 2.5
 tiempo_aviso = 1.0
 tiempo_recarga = 2.4
 alcance_golpe = 3.0
-danio = 16
-vida = 8.0
+danio = 22
+vida = 16.0
 vida_huida = 0.0
 
 [node name="Antorcha3" type="Node3D" parent="Alcantarillas" unique_id=1397936414 instance=ExtResource("10_s0qon")]
@@ -5806,8 +5806,8 @@ rango_ataque = 2.5
 tiempo_aviso = 1.0
 tiempo_recarga = 2.4
 alcance_golpe = 3.0
-danio = 16
-vida = 8.0
+danio = 22
+vida = 16.0
 vida_huida = 0.0
 
 [node name="OrbeMurAlto" type="Area3D" parent="MurallasYPozoAbismo" unique_id=1209083798 instance=ExtResource("15_ht447")]
@@ -6425,8 +6425,8 @@ rango_ataque = 2.5
 tiempo_aviso = 1.0
 tiempo_recarga = 2.0
 alcance_golpe = 3.0
-danio = 16
-vida = 40.0
+danio = 24
+vida = 70.0
 vida_huida = 0.0
 orbe_valor = 0
 es_meta = true
