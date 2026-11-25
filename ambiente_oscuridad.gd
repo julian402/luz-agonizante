@@ -5,12 +5,12 @@ extends Node
 # Cambia suave (no de golpe) y vuelve a lo normal al llegar a una antorcha.
 
 const OSCURO = {          # valores con Ceniza en plena oscuridad
-	"ambiente": 0.06,
-	"sol": 0.14,
-	"niebla": 0.055,
-	"contraste": 1.4,
-	"farol": 2.0,
-	"alcance": 6.0,
+	"ambiente": 0.11,
+	"sol": 0.26,
+	"niebla": 0.04,
+	"contraste": 1.3,
+	"farol": 1.6,
+	"alcance": 5.5,
 }
 const RAPIDEZ = 2.5       # que tan rapido entra y sale el efecto
 
