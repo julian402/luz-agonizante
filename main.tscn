@@ -12,6 +12,8 @@
 [ext_resource type="Script" path="res://poder.gd" id="13_poder"]
 [ext_resource type="PackedScene" path="res://mapa.tscn" id="14_mapa"]
 [ext_resource type="Script" path="res://etapas.gd" id="15_etapas"]
+[ext_resource type="Script" path="res://trampas.gd" id="16_trampas"]
+[ext_resource type="Script" path="res://menu_pausa.gd" id="17_menu"]
 [ext_resource type="Script" uid="uid://cf06v2fupkwsx" path="res://golpeado.gd" id="12_golpeado"]
 
 [sub_resource type="ProceduralSkyMaterial" id="CieloMat"]
@@ -111,3 +113,9 @@ script = ExtResource("10_partida")
 
 [node name="Etapas" type="Node" parent="."]
 script = ExtResource("15_etapas")
+
+[node name="Trampas" type="Node" parent="."]
+script = ExtResource("16_trampas")
+
+[node name="MenuPausa" type="CanvasLayer" parent="."]
+script = ExtResource("17_menu")
