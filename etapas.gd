@@ -72,6 +72,14 @@ var franja_arriba = ColorRect.new()
 var franja_abajo = ColorRect.new()
 var saltar_txt = Label.new()
 var barra_jefe = ProgressBar.new()
+var caja_objetivo = PanelContainer.new()   # recuadro del objetivo (arriba a la izquierda)
+var aviso = Label.new()                    # "OBJETIVO" grande al centro
+var aviso_txt = Label.new()
+var aviso_caja = PanelContainer.new()
+var ultimo_texto = ""
+var ultima_base = ""
+var sin_avance = 0.0                       # segundos sin que cambie el objetivo
+const RECORDAR_CADA = 45.0
 var nombre_jefe = Label.new()
 
 
@@ -158,6 +166,11 @@ func _process(delta):
 	if get_tree().paused or hecho:
 		_actualizar_jefe()
 		return
+	sin_avance += delta
+	if sin_avance >= RECORDAR_CADA:
+		sin_avance = 0.0
+		mostrar_aviso("RECUERDA")
+		_destellar(false)
 	var e = ETAPAS[actual]
 	match e["tipo"]:
 		"matar":
@@ -222,6 +235,43 @@ func actualizar_panel():
 				t = "¡Toma la " + e["llave_nombre"] + "!"
 	panel_objetivo.text = "◆ " + t
 	panel_objetivo.modulate = Color(0.6, 1, 0.6) if hecho else Color.WHITE
+	if panel_objetivo.text != ultimo_texto:
+		var base = panel_objetivo.text.get_slice("   (", 0)
+		var grande = base != ultima_base
+		ultimo_texto = panel_objetivo.text
+		ultima_base = base
+		sin_avance = 0.0
+		_destellar(grande)
+
+
+# El recuadro del objetivo destella al cambiar. Si cambio la tarea (no solo el contador),
+# tambien sale el aviso grande al centro.
+func _destellar(grande):
+	caja_objetivo.pivot_offset = Vector2(0, caja_objetivo.size.y * 0.5)
+	var t = create_tween()
+	t.tween_property(caja_objetivo, "self_modulate", Color(2.2, 1.8, 0.8), 0.12)
+	t.parallel().tween_property(caja_objetivo, "scale", Vector2(1.08, 1.08), 0.12)
+	t.tween_property(caja_objetivo, "self_modulate", Color.WHITE, 0.6)
+	t.parallel().tween_property(caja_objetivo, "scale", Vector2.ONE, 0.4).set_trans(Tween.TRANS_BACK)
+	if grande and cinematica == null and not get_tree().paused:
+		mostrar_aviso()
+
+
+# "OBJETIVO" grande en el centro unos segundos (al empezar la etapa, al cambiar la tarea y como recordatorio).
+func mostrar_aviso(titulo_aviso = "OBJETIVO"):
+	if hecho and actual == ETAPAS.size() - 1:
+		return
+	aviso.text = "◆  " + titulo_aviso + "  ◆"
+	aviso_txt.text = panel_objetivo.text.trim_prefix("◆ ")
+	aviso_caja.modulate.a = 0.0
+	aviso_caja.visible = true
+	aviso_caja.scale = Vector2(0.9, 0.9)
+	var t = create_tween()
+	t.tween_property(aviso_caja, "modulate:a", 1.0, 0.25)
+	t.parallel().tween_property(aviso_caja, "scale", Vector2.ONE, 0.3).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	t.tween_interval(3.0)
+	t.tween_property(aviso_caja, "modulate:a", 0.0, 0.5)
+	t.tween_callback(func(): aviso_caja.visible = false)
 
 
 # Objetivo cumplido: se rompen los sellos, Ceniza se cura y gana vida, y la camara muestra la siguiente.
@@ -238,6 +288,12 @@ func completar():
 		salud.curar(salud.vida_inicial)   # se llena, pero el maximo sigue en 100
 	var rotos = sellos[actual]
 	empezar_etapa(siguiente)
+	# Si se cumplio en el aire (tomar la llave saltando, matar en un combo aereo), espera a que Ceniza
+	# toque el piso: la cinematica pausa todo y si no se quedaba flotando hasta el final.
+	var espera = 0.0
+	while jugador != null and is_instance_valid(jugador) and not jugador.is_on_floor() and espera < 2.5:
+		await get_tree().physics_frame
+		espera += get_physics_process_delta_time()
 	mostrar_cinematica(siguiente, rotos)
 
 
@@ -308,12 +364,16 @@ func mostrar_cinematica(i, rotos):
 			entorno.ambient_light_energy = ambiente
 		camara.global_position = desde
 		_mostrar_hud(true)
-		get_tree().paused = false)
+		get_tree().paused = false
+		sin_avance = 0.0
+		if not (hecho and i == ETAPAS.size() - 1):
+			mostrar_aviso())
 
 
 func _mostrar_hud(si):
-	panel_etapa.visible = si
-	panel_objetivo.visible = si
+	caja_objetivo.visible = si
+	if not si:
+		aviso_caja.visible = false
 	for g in ["hud", "mapa"]:
 		var n = get_tree().get_first_node_in_group(g)
 		if n != null:
@@ -340,13 +400,61 @@ func _armar_interfaz():
 		l.add_theme_color_override("font_outline_color", Color.BLACK)
 		l.add_theme_constant_override("outline_size", maxi(6, tam / 5))
 		l.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	# Panel del objetivo, arriba a la izquierda debajo de la zona.
+	# Recuadro del objetivo, arriba a la izquierda debajo de la zona: fondo oscuro y borde dorado.
+	var estilo = StyleBoxFlat.new()
+	estilo.bg_color = Color(0.03, 0.02, 0.06, 0.72)
+	estilo.border_color = DORADO
+	estilo.border_width_left = 4
+	estilo.border_width_top = 1
+	estilo.border_width_bottom = 1
+	estilo.border_width_right = 1
+	estilo.border_color = Color(DORADO, 0.85)
+	estilo.set_corner_radius_all(5)
+	estilo.content_margin_left = 14
+	estilo.content_margin_right = 16
+	estilo.content_margin_top = 6
+	estilo.content_margin_bottom = 8
+	caja_objetivo.add_theme_stylebox_override("panel", estilo)
+	caja_objetivo.position = Vector2(14, 92)
+	caja_objetivo.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var col = VBoxContainer.new()
+	col.add_theme_constant_override("separation", 2)
+	col.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	caja_objetivo.add_child(col)
 	fuente_bonita.call(panel_etapa, 16, DORADO)
-	panel_etapa.position = Vector2(20, 96)
-	fuente_bonita.call(panel_objetivo, 19, Color.WHITE)
-	panel_objetivo.position = Vector2(20, 118)
-	capa.add_child(panel_etapa)
-	capa.add_child(panel_objetivo)
+	fuente_bonita.call(panel_objetivo, 22, Color.WHITE)
+	col.add_child(panel_etapa)
+	col.add_child(panel_objetivo)
+	capa.add_child(caja_objetivo)
+	# Aviso grande arriba al centro, en una franja oscura para que se lea sobre cualquier fondo.
+	var fila = CenterContainer.new()
+	fila.set_anchors_preset(Control.PRESET_TOP_WIDE)
+	fila.anchor_top = 0.3
+	fila.anchor_bottom = 0.3
+	fila.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	capa.add_child(fila)
+	var estilo_aviso = StyleBoxFlat.new()
+	estilo_aviso.bg_color = Color(0.03, 0.02, 0.06, 0.82)
+	estilo_aviso.border_color = Color(DORADO, 0.8)
+	estilo_aviso.border_width_top = 2
+	estilo_aviso.border_width_bottom = 2
+	estilo_aviso.set_corner_radius_all(6)
+	estilo_aviso.content_margin_left = 34
+	estilo_aviso.content_margin_right = 34
+	estilo_aviso.content_margin_top = 8
+	estilo_aviso.content_margin_bottom = 12
+	aviso_caja.add_theme_stylebox_override("panel", estilo_aviso)
+	aviso_caja.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	aviso_caja.resized.connect(func(): aviso_caja.pivot_offset = aviso_caja.size * 0.5)
+	aviso_caja.visible = false
+	fila.add_child(aviso_caja)
+	var col_aviso = VBoxContainer.new()
+	col_aviso.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	aviso_caja.add_child(col_aviso)
+	for par in [[aviso, 24, DORADO], [aviso_txt, 32, Color.WHITE]]:
+		fuente_bonita.call(par[0], par[1], par[2])
+		par[0].horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		col_aviso.add_child(par[0])
 	# Franjas de cine.
 	for f in [franja_arriba, franja_abajo]:
 		f.color = Color.BLACK
