@@ -3759,7 +3759,8 @@ pixel_size = 0.0052
 modulate = Color(1, 0.92, 0.65, 1)
 outline_modulate = Color(0.03, 0.03, 0.05, 0.95)
 text = "A / D: MOVERSE   ·   ESPACIO: SALTO DOBLE   ·   S + ESPACIO: BAJAR PLATAFORMA
-J: COMBO (3 GOLPES)   ·   SHIFT: ESQUIVAR   ·   QUEDATE EN LA LUZ"
+J: COMBO (3 GOLPES)   ·   SHIFT: ESQUIVAR   ·   K: ESTALLIDO DE LUZ
+M: MAPA   ·   ESC: PAUSA   ·   QUEDATE EN LA LUZ"
 font_size = 36
 outline_size = 10
 
