@@ -132,8 +132,7 @@ func alternar():
 	if hud != null:
 		hud.visible = not abierto
 	if etapas != null:
-		etapas.panel_etapa.visible = not abierto
-		etapas.panel_objetivo.visible = not abierto
+		etapas.caja_objetivo.visible = not abierto
 
 
 func celda_de(p):

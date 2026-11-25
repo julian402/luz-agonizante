@@ -16,6 +16,7 @@
 [ext_resource type="Script" path="res://menu_pausa.gd" id="17_menu"]
 [ext_resource type="Script" path="res://ambiente_oscuridad.gd" id="18_ambiente"]
 [ext_resource type="Script" path="res://pistas_bajar.gd" id="19_pistas"]
+[ext_resource type="Script" path="res://guia_objetivo.gd" id="20_guia"]
 [ext_resource type="Script" uid="uid://cf06v2fupkwsx" path="res://golpeado.gd" id="12_golpeado"]
 
 [sub_resource type="ProceduralSkyMaterial" id="CieloMat"]
@@ -122,6 +123,9 @@ script = ExtResource("18_ambiente")
 
 [node name="PistasBajar" type="Node" parent="."]
 script = ExtResource("19_pistas")
+
+[node name="GuiaObjetivo" type="CanvasLayer" parent="."]
+script = ExtResource("20_guia")
 
 [node name="Trampas" type="Node" parent="."]
 script = ExtResource("16_trampas")
