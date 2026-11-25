@@ -18,7 +18,7 @@ enum Estado { QUIETO, ACERCARSE, APUNTAR, DISPARAR, RECARGA, ALEJARSE }
 @export var tiempo_disparo = 0.5
 @export var tiempo_recarga = 2.0
 @export var rapidez_bola = 7.0
-@export var danio_bola = 8
+@export var danio_bola = 11
 @export var patrulla_rango = 3.0
 @export var orbe_valor = 40
 const COLOR = Color("#7CFF4F")

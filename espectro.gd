@@ -19,7 +19,7 @@ enum Estado { FLOTAR, ACERCARSE, AVISO, PICADA, SUBIR }
 @export var rapidez_subir = 2.5
 @export var tiempo_subir = 1.2
 @export var tiempo_recarga = 0.9
-@export var danio = 10
+@export var danio = 14
 @export var orbe_valor = 35
 const COLOR = Color("#9B5CFF")
 const ROJO = Color("#FF4A3D")
