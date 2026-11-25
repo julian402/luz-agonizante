@@ -18,15 +18,15 @@ const LISTA = [
 	# --- Etapa 2: Las Catacumbas (combinadas con enemigos) ---
 	[C, 61.0, 1.0, {"ciclo": 3.2, "lanzar": 13.0}],                   # al pie del campanario: tambien impulsa hacia arriba
 	[P, 72.0, 1.0, {"ancho": 3.0, "ciclo": 3.0}],                     # pinchos que salen y entran
-	[H, 98.0, 3.0, {"periodo": 2.4, "fase": 0.25}],
+	[H, 108.5, 3.0, {"periodo": 2.4, "fase": 0.25}],                   # entre el paso central y la torre este
 	[C, 71.0, -13.0, {"ciclo": 3.4, "fase": 0.5}],                    # alcantarillas
 	[P, 105.0, -17.0, {"ancho": 2.5}],                                # fondo del pozo de las alcantarillas
 	# --- Etapa 3: La Guardia (seguidas, hay que leer los tiempos) ---
-	[P, 139.5, 1.0, {"ancho": 3.0, "ciclo": 2.6}],
-	[H, 144.0, 3.0, {"periodo": 2.2, "fase": 0.5}],
+	[H, 135.0, 3.0, {"periodo": 2.2, "fase": 0.5}],
+	[P, 143.5, 1.0, {"ancho": 3.0, "ciclo": 2.6}],                    # bajo el escalon: se puede esquivar por arriba
 	[P, 148.5, -3.0, {"ancho": 2.0}],                                 # en el foso del Guardian
-	[H, 168.0, 3.0, {"periodo": 2.0}],
-	[C, 173.0, 1.0, {"ciclo": 3.0, "fase": 0.3}],
+	[C, 170.5, 1.0, {"ciclo": 3.0, "fase": 0.3}],
+	[H, 176.0, 3.0, {"periodo": 2.0, "amplitud": 45.0}],                # cuida la boca del pozo
 	# --- Etapa final: el Trono (chorros a los lados de la Sombra Madre) ---
 	[C, 150.0, -27.0, {"ciclo": 4.0}],
 	[C, 166.0, -27.0, {"ciclo": 4.0, "fase": 0.5}],
@@ -66,6 +66,51 @@ func _ready():
 			var piso = espacio.intersect_ray(q2)
 			var y_piso = piso.position.y if not piso.is_empty() else golpe.position.y - 7.0
 			t.largo = golpe.position.y - (y_piso + 1.0)
+			# Que la cuchilla y la cadena no atraviesen ninguna plataforma: se abre solo hasta donde hay aire.
+			var libre = _amplitud_libre(espacio, golpe.position, t.largo)
+			if libre < t.amplitud:
+				t.amplitud = libre
+			if t.amplitud < 20.0:
+				push_warning("hacha con poco espacio en " + str(desde) + ": " + str(t.amplitud) + " grados")
 		t.position = Vector3(d[1], golpe.position.y, 0)   # Nivel esta en el origen
 		nivel.add_child(t)
 	print("trampas: ", get_tree().get_nodes_in_group("trampas").size())
+
+
+# Mayor angulo (grados, igual a cada lado) en que el hacha no toca nada solido ni plataformas.
+# Prueba la cuchilla (esfera un poco mas grande que ella) y la cadena (un rayo) cada grado.
+func _amplitud_libre(espacio, pivote: Vector3, largo: float) -> float:
+	var bola = SphereShape3D.new()
+	bola.radius = 0.95
+	var q = PhysicsShapeQueryParameters3D.new()
+	q.shape = bola
+	q.collision_mask = 3   # solidos y plataformas que se atraviesan
+	var libre = 90.0
+	for lado in [-1.0, 1.0]:
+		var g = 0.0
+		while g <= 90.0:
+			var a = deg_to_rad(g) * lado
+			var dir = Vector3(sin(a), -cos(a), 0)
+			q.transform = Transform3D(Basis(), pivote + dir * largo)
+			var choca = _toca_nivel(espacio.intersect_shape(q, 8))
+			if not choca:
+				var r = PhysicsRayQueryParameters3D.create(pivote + dir * 0.3, pivote + dir * (largo - 0.8), 3)
+				var h = espacio.intersect_ray(r)
+				choca = not h.is_empty() and _es_nivel(h.collider)
+			if choca:
+				break
+			g += 1.0
+		libre = minf(libre, g - 4.0)   # 3 grados de margen
+	return maxf(libre, 0.0)
+
+
+func _toca_nivel(choques) -> bool:
+	for c in choques:
+		if _es_nivel(c.collider):
+			return true
+	return false
+
+
+# Solo cuenta el escenario: ni enemigos, ni Ceniza, ni los sellos (que se abren).
+func _es_nivel(o) -> bool:
+	return o is StaticBody3D and not o.is_in_group("sellos")
